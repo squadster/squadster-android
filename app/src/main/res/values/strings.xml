@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Squadster</string>
+    <string name="debug_version_code">Version: %s Build: %d</string>
+
+    <string name="network_error">Network error</string>
+    <string name="timeout_error">Timeout error</string>
+    <string name="unknown_error">Unknown error</string>
+</resources>
