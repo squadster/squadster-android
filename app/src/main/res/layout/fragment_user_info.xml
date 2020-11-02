@@ -36,6 +36,7 @@
         android:paddingRight="20dp"
         android:paddingBottom="12dp"
         android:visibility="gone"
+        android:text="@string/something_went_wrong"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,13 +1,10 @@
 package com.android.squadster.ui.main.main
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import com.android.squadster.BuildConfig
+import android.webkit.*
 import com.android.squadster.R
 import com.android.squadster.core.BaseFragment
 import com.android.squadster.main.main.UserInfoPresenter
@@ -29,7 +26,7 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
 
     @ProvidePresenter
     fun providePresenter(): UserInfoPresenter =
-            scope.getInstance(UserInfoPresenter::class.java)
+        scope.getInstance(UserInfoPresenter::class.java)
 
     override fun onBackPressed() {
         userInfoPresenter.onBackPressed()
@@ -41,50 +38,69 @@ class UserInfoFragment : BaseFragment(), UserInfoView {
         setupViews()
     }
 
-    override fun showLoading() {
+    private fun showLoading() {
         clpb.visibility = View.VISIBLE
         clpb.show()
     }
 
-    override fun hideLoading() {
+    private fun hideLoading() {
         clpb.visibility = View.INVISIBLE
         clpb.hide()
     }
 
-    override fun showErrorMessage(error: String) {
+    private fun showErrorMessage() {
         txt_error.visibility = View.VISIBLE
-        txt_error.text = error
+    }
+
+    private fun hideErrorMessage() {
+        txt_error.visibility = View.GONE
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
         webview.settings.domStorageEnabled = true
         webview.settings.javaScriptEnabled = true
+        webview.addJavascriptInterface(MyJavaScriptInterface(), "HtmlViewer")
         webview.webViewClient = object : WebViewClient() {
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                hideErrorMessage()
+                showLoading()
+                if (url != null && url.contains("http://squadster.wtf/api/auth/vk/callback?code=")) {
+                    webview.visibility = View.GONE
+                } else {
+                    webview.visibility = View.VISIBLE
+                }
+                super.onPageStarted(view, url, favicon)
+            }
+
             override fun onPageFinished(view: WebView?, url: String?) {
+                hideLoading()
                 webview.animate().alpha(1.0f).duration = 500
-                if (url != null) {
-                    if (userInfoPresenter.getInfoAboutVKAccount(url)) {
-                        webview.visibility = View.GONE
-                        userInfoPresenter.getFullVKProfile()
-                    }
+                if (url != null && url.contains("http://squadster.wtf/api/auth/vk/callback?code=")) {
+                    webview.loadUrl("javascript:window.HtmlViewer.getInfo('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
                 }
             }
 
-            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
                 super.onReceivedError(view, request, error)
-
+                hideLoading()
                 webview.visibility = View.GONE
-                showErrorMessage("Something went wrong. Please restart app")
+                showErrorMessage()
             }
         }
 
-        webview.loadUrl("https://api.vkontakte.ru/oauth/authorize?" +
-                "client_id=${BuildConfig.CLIENT_ID}&" +
-                "redirect_uri=https://oauth.vk.com/blank.html&" +
-                "response_type=token&" +
-                "scope=email&" +
-                "lang=en&" +
-                "v=5.103")
+        webview.loadUrl("http://squadster.wtf/api/auth/vk?state=mobile=true")
+    }
+
+    inner class MyJavaScriptInterface {
+
+        @JavascriptInterface
+        fun getInfo(content: String) {
+            userInfoPresenter getAllInfoAboutUser (content)
+        }
     }
 }
