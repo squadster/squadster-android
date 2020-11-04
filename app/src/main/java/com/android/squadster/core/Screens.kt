@@ -1,24 +1,24 @@
 package com.android.squadster.core
 
-import com.maltamenu.pax.ui.main.MainFlowFragment
-import com.android.squadster.ui.main.main.UserInfoFragment
-import com.android.squadster.ui.main.squad.SquadFragment
+import com.android.squadster.ui.MainFlowFragment
+import com.android.squadster.ui.auth.AuthFragment
+import com.android.squadster.ui.squads.SquadsFragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
 object Screens {
 
-    object PaymentFlow : SupportAppScreen() {
+    object MainFlow : SupportAppScreen() {
 
         override fun getFragment() = MainFlowFragment()
     }
 
-    object UserInfoScreen : SupportAppScreen() {
+    object AuthScreen : SupportAppScreen() {
 
-        override fun getFragment() = UserInfoFragment()
+        override fun getFragment() = AuthFragment()
     }
 
-    object SquadScreen : SupportAppScreen() {
+    object SquadsScreen : SupportAppScreen() {
 
-        override fun getFragment() = SquadFragment()
+        override fun getFragment() = SquadsFragment()
     }
 }

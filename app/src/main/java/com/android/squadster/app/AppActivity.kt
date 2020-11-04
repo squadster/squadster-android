@@ -1,8 +1,6 @@
 package com.android.squadster.app
 
 import android.os.Bundle
-import androidx.core.view.isGone
-import com.android.squadster.BuildConfig
 import com.android.squadster.R
 import com.android.squadster.app.presentation.AppPresenter
 import com.android.squadster.app.presentation.AppView
@@ -48,17 +46,7 @@ class AppActivity : MvpAppCompatActivity(), AppView {
         val view = binding.root
         setContentView(view)
 
-        if (BuildConfig.DEBUG && savedInstanceState == null) {
-            binding.versionView.postDelayed(
-                {
-                    binding.versionView.isGone = true
-                    presenter.onAppStarted()
-                },
-                DELAY_VERSION_VIEW
-            )
-        } else {
-            binding.versionView.isGone = true
-        }
+        presenter.onAppStarted()
     }
 
     override fun onResumeFragments() {
@@ -73,17 +61,7 @@ class AppActivity : MvpAppCompatActivity(), AppView {
         super.onPause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        binding.versionView.handler.removeCallbacksAndMessages(null)
-    }
-
     override fun onBackPressed() {
         currentFlowFragment?.onBackPressed() ?: presenter.onBackPressed()
-    }
-
-    companion object {
-        private const val DELAY_VERSION_VIEW = 1000L
     }
 }

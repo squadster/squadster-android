@@ -20,7 +20,7 @@ class AppPresenter @Inject constructor(
     }
 
     fun onAppStarted() {
-        router.newRootScreen(Screens.PaymentFlow)
+        router.newRootScreen(Screens.MainFlow)
     }
 
     fun onBackPressed() {
