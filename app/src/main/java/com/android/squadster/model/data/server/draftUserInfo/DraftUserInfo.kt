@@ -24,7 +24,7 @@ data class User(
     @SerializedName("id")
     val id: Int,
     @SerializedName("image_url")
-    val imageUrl: String,
+    var imageUrl: String,
     @SerializedName("last_name")
     val lastName: String,
     @SerializedName("mobile_phone")

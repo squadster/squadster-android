@@ -1,0 +1,56 @@
+  query getCurrentUser {
+    currentUser {
+      id
+      firstName
+      lastName
+      mobilePhone
+      faculty
+      university
+      imageUrl
+      smallImageUrl
+      vkUrl
+      birthDate
+      squadMember {
+        id
+        role
+        queueNumber
+        squad {
+          id
+          advertisment
+          classDay
+          squadNumber
+          linkInvitationsEnabled
+          hashId
+          requests {
+            id
+            approvedAt
+            user {
+              id
+              firstName
+              lastName
+              faculty
+              smallImageUrl
+              vkUrl
+            }
+          }
+          members {
+            id
+            role
+            queueNumber
+            user {
+              id
+              firstName
+              lastName
+              mobilePhone
+              faculty
+              university
+              imageUrl
+              smallImageUrl
+              vkUrl
+              birthDate
+            }
+          }
+        }
+      }
+    }
+  }

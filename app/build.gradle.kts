@@ -98,6 +98,9 @@ dependencies {
     // Apollo
     implementation("com.apollographql.apollo:apollo-runtime:2.4.2")
     implementation("com.apollographql.apollo:apollo-coroutines-support:2.4.2")
+
+    //Coroutine
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0")
 }
 
 apollo {

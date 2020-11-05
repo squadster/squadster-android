@@ -27,6 +27,7 @@ class AuthPresenter @Inject constructor(
     infix fun getAllInfoAboutUser(info: String) {
         val infoAboutUser = info.substring(info.indexOf("{"), info.lastIndexOf("}") + 1)
         val user = gson.fromJson(infoAboutUser, UserInfo::class.java)
+        user.user.imageUrl = user.user.imageUrl.replace("&amp;", "&")
         draftUserInfo.userInfo = user
         goToSquadsScreen()
     }
