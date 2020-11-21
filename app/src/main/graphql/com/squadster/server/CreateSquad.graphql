@@ -1,0 +1,37 @@
+mutation createSquad($squad_number: String!, $class_day: Int!) {
+    createSquad(squadNumber: $squad_number, classDay: $class_day) {
+        advertisment
+        hashId
+        classDay
+        id
+        squadNumber
+        requests {
+            id
+            approvedAt
+            user {
+                id
+                firstName
+                lastName
+                faculty
+                smallImageUrl
+                vkUrl
+            }
+        }
+        members {
+            role
+            queueNumber
+            user {
+                id
+                firstName
+                lastName
+                mobilePhone
+                faculty
+                university
+                imageUrl
+                smallImageUrl
+                vkUrl
+                birthDate
+            }
+        }
+    }
+}

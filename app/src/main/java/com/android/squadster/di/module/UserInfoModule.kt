@@ -1,6 +1,6 @@
 package com.android.squadster.di.module
 
-import com.android.squadster.model.data.server.draftUserInfo.DraftUserInfo
+import com.android.squadster.model.data.server.model.DraftUserInfo
 import toothpick.config.Module
 
 class UserInfoModule : Module() {

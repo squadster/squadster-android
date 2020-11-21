@@ -22,8 +22,8 @@ android {
 
     buildTypes {
         getByName("debug") {
-            buildConfigField("String", "BASE_URL_VK", "\"https://api.vk.com/method/\"")
-            buildConfigField("String", "CLIENT_ID", "\"7633187\"")
+            buildConfigField("String", "BASE_URL_SQUADSTER_AUTH", "\"http://squadster.wtf/api/auth/vk?state=mobile=true\"")
+            buildConfigField("String", "BASE_URL_SQUADSTER_QUERY", "\"http://squadster.wtf/api/query\"")
         }
 
         getByName("release") {
@@ -57,16 +57,17 @@ android {
 
 dependencies {
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
     kapt("com.github.moxy-community:moxy-compiler:2.2.0")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:3.1.0")
     kapt("com.github.bumptech.glide:compiler:4.11.0")
 
     // AndroidX
-    implementation("androidx.appcompat:appcompat:1.2.0-alpha01")
-    implementation("androidx.core:core-ktx:1.3.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0")
-    implementation("androidx.fragment:fragment:1.2.5")
+    implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
+    implementation("androidx.core:core-ktx:1.3.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+    implementation("androidx.fragment:fragment-ktx:1.2.5")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // Moxy Community(MVP)
     implementation("com.github.moxy-community:moxy-androidx:2.2.0")

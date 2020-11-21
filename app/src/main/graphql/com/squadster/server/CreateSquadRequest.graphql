@@ -1,0 +1,8 @@
+mutation createSquadRequest($squadId: ID!) {
+    createSquadRequest(squadId: $squadId) {
+        id
+        squad {
+            id
+        }
+    }
+}

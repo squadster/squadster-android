@@ -1,7 +1,9 @@
 package com.android.squadster.core
 
+import androidx.fragment.app.Fragment
 import com.android.squadster.ui.MainFlowFragment
 import com.android.squadster.ui.auth.AuthFragment
+import com.android.squadster.ui.profile.ProfileFragment
 import com.android.squadster.ui.squads.SquadsFragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
@@ -20,5 +22,10 @@ object Screens {
     object SquadsScreen : SupportAppScreen() {
 
         override fun getFragment() = SquadsFragment()
+    }
+
+    object ProfileScreen : SupportAppScreen() {
+
+        override fun getFragment() = ProfileFragment()
     }
 }

@@ -1,8 +1,9 @@
-package com.android.squadster.model.data.server.draftUserInfo
+package com.android.squadster.model.data.server.model
 
 import com.google.gson.annotations.SerializedName
+import javax.inject.Inject
 
-class DraftUserInfo {
+class DraftUserInfo @Inject constructor() {
 
     var userInfo: UserInfo? = null
 }
@@ -22,7 +23,7 @@ data class User(
     @SerializedName("first_name")
     val firstName: String,
     @SerializedName("id")
-    val id: Int,
+    val id: String,
     @SerializedName("image_url")
     var imageUrl: String,
     @SerializedName("last_name")

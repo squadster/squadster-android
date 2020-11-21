@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@drawable/launch_screen">
 
     <WebView
         android:id="@+id/webview"
@@ -11,17 +11,6 @@
         android:layout_height="match_parent"
         android:alpha="0"
         android:animateLayoutChanges="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/clpb"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="50dp"
-        android:layout_height="45dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

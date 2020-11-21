@@ -1,0 +1,10 @@
+mutation deleteSquadRequest($id: ID!) {
+    deleteSquadRequest(
+        id: $id
+    ) {
+        id
+        squad {
+            id
+        }
+    }
+}

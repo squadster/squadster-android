@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">Squadster</string>
-    <string name="debug_version_code">Version: %s Build: %d</string>
+    <string name="profile">Профиль</string>
+    <string name="log_out">Выйти</string>
+    <string name="about_us">О нас</string>
 
     <string name="network_error">Network error</string>
     <string name="timeout_error">Timeout error</string>
     <string name="unknown_error">Unknown error</string>
-    <string name="something_went_wrong">Something went wrong. Please restart app</string>
+
+    <string name="something_went_wrong">Что-то пошло не так. Перезагрузите приложение</string>
+    <string name="commander">Командир</string>
+    <string name="squad_number">Номер</string>
+    <string name="no_squads">Список взводов пуст</string>
 </resources>

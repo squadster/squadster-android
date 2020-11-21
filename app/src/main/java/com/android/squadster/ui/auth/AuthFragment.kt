@@ -5,10 +5,11 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.webkit.*
+import com.android.squadster.BuildConfig
 import com.android.squadster.R
 import com.android.squadster.core.BaseFragment
-import com.android.squadster.main.auth.AuthPresenter
-import com.android.squadster.main.auth.AuthView
+import com.android.squadster.screenslogic.auth.AuthPresenter
+import com.android.squadster.screenslogic.auth.AuthView
 import kotlinx.android.synthetic.main.fragment_auth.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -38,16 +39,6 @@ class AuthFragment : BaseFragment(), AuthView {
         setupViews()
     }
 
-    private fun showLoading() {
-        clpb.visibility = View.VISIBLE
-        clpb.show()
-    }
-
-    private fun hideLoading() {
-        clpb.visibility = View.INVISIBLE
-        clpb.hide()
-    }
-
     private fun showErrorMessage() {
         txt_error.visibility = View.VISIBLE
     }
@@ -58,13 +49,15 @@ class AuthFragment : BaseFragment(), AuthView {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
+        webview.clearCache(true)
+        webview.clearFormData()
+        webview.clearHistory()
         webview.settings.domStorageEnabled = true
         webview.settings.javaScriptEnabled = true
-        webview.addJavascriptInterface(MyJavaScriptInterface(), "HtmlViewer")
+        webview.addJavascriptInterface(MyJavaScriptInterface(), NAME_OF_HTML_INTERFACE)
         webview.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 hideErrorMessage()
-                showLoading()
                 if (url != null && url.contains(CALLBACK_URL)) {
                     webview.visibility = View.GONE
                 } else {
@@ -74,7 +67,6 @@ class AuthFragment : BaseFragment(), AuthView {
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                hideLoading()
                 webview.animate().alpha(1.0f).duration = 500
                 if (url != null && url.contains(CALLBACK_URL)) {
                     webview.loadUrl(JAVASCRIPT_COMMAND)
@@ -87,13 +79,12 @@ class AuthFragment : BaseFragment(), AuthView {
                 error: WebResourceError?
             ) {
                 super.onReceivedError(view, request, error)
-                hideLoading()
                 webview.visibility = View.GONE
                 showErrorMessage()
             }
         }
 
-        webview.loadUrl(AUTH_URL)
+        webview.loadUrl(BuildConfig.BASE_URL_SQUADSTER_AUTH)
     }
 
     inner class MyJavaScriptInterface {
@@ -107,7 +98,7 @@ class AuthFragment : BaseFragment(), AuthView {
     }
 
     companion object {
-        private const val AUTH_URL = "http://squadster.wtf/api/auth/vk?state=mobile=true"
+        private const val NAME_OF_HTML_INTERFACE = "HtmlViewer"
         private const val CALLBACK_URL = "http://squadster.wtf/api/auth/vk/callback?code="
         private const val JAVASCRIPT_COMMAND =
             "javascript:window.HtmlViewer.getInfo('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');"

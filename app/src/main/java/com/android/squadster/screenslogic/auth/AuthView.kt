@@ -1,4 +1,4 @@
-package com.android.squadster.main.auth
+package com.android.squadster.screenslogic.auth
 
 import moxy.MvpView
 
