@@ -41,7 +41,6 @@ class MembersAdapter(
         val member = members.find {
             it.id == id
         }
-
         if (member != null) {
             val index = members.indexOf(member)
             member.role = role
@@ -54,7 +53,6 @@ class MembersAdapter(
         val member = members.find {
             it.id == id
         }
-
         if (member != null) {
             val index = members.indexOf(member)
             members.remove(member)
