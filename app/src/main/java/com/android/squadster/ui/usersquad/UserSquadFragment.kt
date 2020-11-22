@@ -1,28 +1,32 @@
 package com.android.squadster.ui.usersquad
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.squadster.R
 import com.android.squadster.core.BaseFragment
-import com.android.squadster.model.data.server.model.RequestStatus
-import com.android.squadster.screenslogic.squads.SquadsPresenter
-import com.android.squadster.screenslogic.squads.SquadsView
 import com.android.squadster.screenslogic.usersquad.UserSquadPresenter
 import com.android.squadster.screenslogic.usersquad.UserSquadView
-import com.android.squadster.ui.squads.dialog.CreateSquadDialog
-import com.android.squadster.ui.squads.recyclerview.OnClickItem
-import com.android.squadster.ui.squads.recyclerview.SquadsAdapter
-import com.squadster.server.GetSquadsQuery
-import kotlinx.android.synthetic.main.fragment_squads.*
+import com.android.squadster.ui.usersquad.recyclerview.MembersAdapter
+import com.android.squadster.ui.usersquad.recyclerview.OnClickSquadMember
+import kotlinx.android.synthetic.main.fragment_user_squad.*
+import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import toothpick.Scope
 
-class UserSquadFragment : BaseFragment(), UserSquadView {
+
+class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
 
     override val layoutRes = R.layout.fragment_user_squad
+
+    private lateinit var membersAdapter: MembersAdapter
+
+    private var isCurrentUserCommander = false
 
     override fun installScopeModules(scope: Scope) {
     }
@@ -42,6 +46,17 @@ class UserSquadFragment : BaseFragment(), UserSquadView {
         super.onViewCreated(view, savedInstanceState)
 
         setupViews()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_user_squad, menu)
+
+        isCurrentUserCommander = userSquadPresenter.isCurrentUserCommander()
+
+        if (!isCurrentUserCommander) {
+            val item = menu.findItem(R.id.mi_settings)
+            item.isVisible = false
+        }
     }
 
     /*override fun setSquads(squads: List<GetSquadsQuery.Squad>) {
@@ -90,26 +105,62 @@ class UserSquadFragment : BaseFragment(), UserSquadView {
         squadsPresenter.cancelRequest(requestId)
     }*/
 
+    override fun deleteMember(id: Int) {
+        userSquadPresenter.deleteMember(id)
+    }
+
+    override fun updateMemberRole(id: Int, role: String, quequeNumber: Int) {
+        userSquadPresenter.updateMemberRole(id, role, quequeNumber)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.mi_settings -> {
+
+                true
+            }
+            R.id.mi_profile -> {
+                userSquadPresenter.goToProfile()
+                true
+            }
+            R.id.mi_squads -> {
+                userSquadPresenter.goToSquads()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun setupViews() {
-        /*squadsPresenter.loadUserAvatar(context, iv_profile)
+        (activity as MvpAppCompatActivity?)?.setSupportActionBar(toolbar_user_squad)
+        setHasOptionsMenu(true)
 
-        iv_profile.setOnClickListener {
-            squadsPresenter.goToProfile()
-        }
+        val squadNumber =
+            userSquadPresenter.draftUserInfo.userInfo?.squadMember?.squad?.squadNumber ?: getString(
+                R.string.unknown_squad_number
+            )
+        toolbar_user_squad.title = getString(R.string.user_squad, squadNumber)
 
-        srl_update_squads_list.setOnRefreshListener {
-            squadsPresenter.getSquads()
-        }
+        val classDay = userSquadPresenter.getClassDay()
+        txt_class_day.text = getString(R.string.class_day, classDay)
 
-        fl_create_squad.setOnClickListener {
-            val createSquadDialog = CreateSquadDialog(requireContext(), ::createSquad)
-            createSquadDialog.show()
-        }
+        val announcement =
+            userSquadPresenter.draftUserInfo.userInfo?.squadMember?.squad?.advertisment
+                ?: getString(
+                    R.string.none_announcement
+                )
+        txt_announcement.text = getString(R.string.announcement, announcement)
 
-        squadsAdapter = SquadsAdapter(this, squadsPresenter.getCurrentUserId())
+
+        membersAdapter = MembersAdapter(
+            this,
+            userSquadPresenter.draftUserInfo.userInfo?.id ?: "",
+            isCurrentUserCommander
+        )
         val llManager = LinearLayoutManager(context)
-        rv_squads.layoutManager = llManager
-        rv_squads.adapter = squadsAdapter*/
+        rv_soldiers.layoutManager = llManager
+        rv_soldiers.adapter = membersAdapter
+        membersAdapter.setData(userSquadPresenter.draftUserInfo.userInfo?.squadMember?.squad?.members)
     }
 
     /*private fun createSquad(squadNumber: String, classDay:Int){

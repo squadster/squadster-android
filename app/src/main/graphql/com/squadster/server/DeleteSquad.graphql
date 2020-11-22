@@ -1,0 +1,5 @@
+mutation deleteSquad($id: ID!) {
+    deleteSquad(id: $id) {
+        id
+    }
+}

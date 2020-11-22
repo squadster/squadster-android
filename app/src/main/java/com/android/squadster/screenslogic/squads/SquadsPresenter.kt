@@ -29,19 +29,16 @@ class SquadsPresenter @Inject constructor(
     private val queriesInteractor: QueriesInteractor
 ) : BasePresenter<SquadsView>() {
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
+    override fun attachView(view: SquadsView?) {
+        super.attachView(view)
 
         getSquads()
     }
-
-    fun loadUserAvatar(context: Context?, view: ImageView) {
-        if (context != null) {
-            Glide.with(context)
-                .load(draftUserInfo.userInfo?.imageUrl)
-                .circleCrop()
-                .into(view)
-        }
+    fun loadUserAvatar(context: Context, view: ImageView) {
+        Glide.with(context)
+            .load(draftUserInfo.userInfo?.imageUrl)
+            .circleCrop()
+            .into(view)
     }
 
     fun goToProfile() {

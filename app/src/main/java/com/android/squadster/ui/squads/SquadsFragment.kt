@@ -10,7 +10,7 @@ import com.android.squadster.model.data.server.model.RequestStatus
 import com.android.squadster.screenslogic.squads.SquadsPresenter
 import com.android.squadster.screenslogic.squads.SquadsView
 import com.android.squadster.ui.squads.dialog.CreateSquadDialog
-import com.android.squadster.ui.squads.recyclerview.OnClickItem
+import com.android.squadster.ui.squads.recyclerview.OnClickSquad
 import com.android.squadster.ui.squads.recyclerview.SquadsAdapter
 import com.squadster.server.GetSquadsQuery
 import kotlinx.android.synthetic.main.fragment_squads.*
@@ -18,7 +18,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import toothpick.Scope
 
-class SquadsFragment : BaseFragment(), SquadsView, OnClickItem {
+class SquadsFragment : BaseFragment(), SquadsView, OnClickSquad {
 
     override val layoutRes = R.layout.fragment_squads
 
@@ -91,7 +91,7 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickItem {
     }
 
     private fun setupViews() {
-        squadsPresenter.loadUserAvatar(context, iv_profile)
+        squadsPresenter.loadUserAvatar(requireContext(), iv_profile)
 
         iv_profile.setOnClickListener {
             squadsPresenter.goToProfile()

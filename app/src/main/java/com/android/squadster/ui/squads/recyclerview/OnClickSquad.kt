@@ -1,6 +1,6 @@
 package com.android.squadster.ui.squads.recyclerview
 
-interface OnClickItem {
+interface OnClickSquad {
 
     fun sendRequest(squadId: String)
 

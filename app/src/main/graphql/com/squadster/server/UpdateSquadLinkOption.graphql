@@ -1,0 +1,8 @@
+mutation updateSquadLinkOption($id: ID!, $linkOption: Boolean) {
+    updateSquad(
+        id: $id,
+        linkInvitationsEnabled: $linkOption
+    ) {
+        linkInvitationsEnabled
+    }
+}

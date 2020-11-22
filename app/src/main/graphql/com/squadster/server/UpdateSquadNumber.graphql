@@ -1,0 +1,8 @@
+mutation updateSquadNumber($id: ID!, $number: String) {
+    updateSquad(
+        id: $id,
+        squadNumber: $number
+    ) {
+        squadNumber
+    }
+}

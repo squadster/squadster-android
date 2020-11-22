@@ -25,7 +25,7 @@ class ProfilePresenter @Inject constructor(
 ) : BasePresenter<ProfileView>() {
 
     fun onBackPressed() {
-        flowRouter.backTo(Screens.SquadsScreen)
+        flowRouter.exit()
     }
 
     fun logOut(context: Context?) {

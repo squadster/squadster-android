@@ -2,13 +2,12 @@ package com.android.squadster.ui.squads.recyclerview
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.android.squadster.model.data.server.model.RequestStatus
 import com.android.squadster.model.data.server.model.Squad
 import kotlinx.android.synthetic.main.item_squad.view.*
 
 class SquadViewHolder(
     view: View,
-    private val handler: OnClickItem,
+    private val handler: OnClickSquad,
     private val currentUserId: String
 ) : RecyclerView.ViewHolder(view) {
 

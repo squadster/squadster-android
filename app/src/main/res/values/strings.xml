@@ -9,12 +9,31 @@
     <string name="unknown_error">Unknown error</string>
 
     <string name="something_went_wrong">Что-то пошло не так. Перезагрузите приложение</string>
-    <string name="commander">Командир</string>
     <string name="squad_number">Номер</string>
     <string name="no_squads">Список взводов пуст</string>
     <string name="create_squad">Создать взвод</string>
     <string name="number">Номер взвода</string>
-    <string name="class_day">День занятий</string>
+    <string name="class_day">День занятий:\n%s</string>
+    <string name="squads">Взводы</string>
+    <string name="user_squad">Взвод №%s</string>
+    <string name="announcement">Объявление:\n%s</string>
+    <string name="composition">Состав</string>
+    <string name="unknown_squad_number">####</string>
+    <string name="unknown_class_day">Не известно</string>
+    <string name="none_announcement">Здесь пока ничего нет</string>
+
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
+
+    <string name="commander">Командир</string>
+    <string name="second_in_command">Зам. командира</string>
+    <string name="journalist">Журналист</string>
+    <string name="soldier">Солдат</string>
 
     <string-array name="days">
         <item>Понедельник</item>

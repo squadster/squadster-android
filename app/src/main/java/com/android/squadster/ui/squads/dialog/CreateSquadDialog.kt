@@ -22,7 +22,7 @@ class CreateSquadDialog(
     }
 
     private fun setupViews() {
-        et_squad_number.doOnTextChanged { text, start, before, count ->
+        et_squad_number.doOnTextChanged { text, _, _, _ ->
             btn_create_squad.isEnabled = !text.isNullOrEmpty()
         }
         btn_cross.setOnClickListener {

@@ -11,7 +11,7 @@ import com.android.squadster.model.data.server.model.Squad
 import com.squadster.server.GetSquadsQuery
 
 class SquadsAdapter(
-    private val handler: OnClickItem,
+    private val handler: OnClickSquad,
     private val currentUserId: String
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

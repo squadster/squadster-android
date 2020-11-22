@@ -2,6 +2,7 @@ package com.android.squadster.screenslogic.usersquad
 
 import android.content.Context
 import android.widget.ImageView
+import com.android.squadster.R
 import com.android.squadster.core.BasePresenter
 import com.android.squadster.core.ErrorHandler
 import com.android.squadster.core.FlowRouter
@@ -21,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
+import java.util.*
 import javax.inject.Inject
 
 @InjectViewState
@@ -28,12 +30,93 @@ class UserSquadPresenter @Inject constructor(
     private val flowRouter: FlowRouter,
     private val errorHandler: ErrorHandler,
     private val resourceManager: ResourceManager,
-    private val draftUserInfo: DraftUserInfo,
+    val draftUserInfo: DraftUserInfo,
     private val queriesInteractor: QueriesInteractor
 ) : BasePresenter<UserSquadView>() {
 
     fun onBackPressed() {
         flowRouter.finishFlow()
+    }
+
+    fun isCurrentUserCommander(): Boolean {
+        var isCurrentUserCommander = false
+
+        draftUserInfo.userInfo?.squadMember?.squad?.members?.forEach { member ->
+            if (member.id == draftUserInfo.userInfo?.id) {
+                isCurrentUserCommander = true
+                return@forEach
+            }
+        }
+
+        return isCurrentUserCommander
+    }
+
+    fun getClassDay(): String {
+
+        return when (draftUserInfo.userInfo?.squadMember?.squad?.classDay?.toLowerCase(Locale.getDefault())) {
+            "monday" -> resourceManager.getString(R.string.monday)
+            "tuesday" -> resourceManager.getString(R.string.tuesday)
+            "wednesday" -> resourceManager.getString(R.string.wednesday)
+            "thursday" -> resourceManager.getString(R.string.thursday)
+            "friday" -> resourceManager.getString(R.string.friday)
+            "saturday" -> resourceManager.getString(R.string.saturday)
+            "sunday" -> resourceManager.getString(R.string.sunday)
+            else -> resourceManager.getString(R.string.unknown_class_day)
+        }
+    }
+
+    fun goToSquads() {
+        flowRouter.navigateTo(Screens.SquadsScreen)
+    }
+
+    fun goToProfile() {
+        flowRouter.navigateTo(Screens.ProfileScreen)
+    }
+
+    fun deleteMember(id: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            /*queriesInteractor.createSquadRequest(
+                squadId,
+                object : ResponseCallback<CreateSquadRequestMutation.Data> {
+
+                    override fun success(data: CreateSquadRequestMutation.Data) {
+                        if (data.createSquadRequest?.squad?.id != null) {
+                            viewState.updateSquadInvitation(
+                                data.createSquadRequest.squad.id,
+                                data.createSquadRequest.id,
+                                RequestStatus.SEND
+                            )
+                        }
+                    }
+
+                    override fun error(error: String) {
+                        viewState.showErrorMessage(error)
+                    }
+                })*/
+        }
+    }
+
+    fun updateMemberRole(id: Int, role: String, quequeNumber: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            /*queriesInteractor.createSquadRequest(
+                squadId,
+                object : ResponseCallback<CreateSquadRequestMutation.Data> {
+
+                    override fun success(data: CreateSquadRequestMutation.Data) {
+                        if (data.createSquadRequest?.squad?.id != null) {
+                            viewState.updateSquadInvitation(
+                                data.createSquadRequest.squad.id,
+                                data.createSquadRequest.id,
+                                RequestStatus.SEND
+                            )
+                        }
+                    }
+
+                    override fun error(error: String) {
+                        viewState.showErrorMessage(error)
+                    }
+                })*/
+        }
     }
 
     /*fun loadUserAvatar(context: Context?, view: ImageView) {

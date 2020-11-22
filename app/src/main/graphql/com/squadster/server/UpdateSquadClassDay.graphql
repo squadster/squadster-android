@@ -1,0 +1,8 @@
+mutation updateSquadClassDay($id: ID!, $classDay: String) {
+    updateSquad(
+        id: $id,
+        classDay: $classDay
+    ) {
+        classDay
+    }
+}
