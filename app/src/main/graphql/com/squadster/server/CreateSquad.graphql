@@ -4,6 +4,7 @@ mutation createSquad($squad_number: String!, $class_day: Int!) {
         hashId
         classDay
         id
+        linkInvitationsEnabled
         squadNumber
         requests {
             id
@@ -18,6 +19,7 @@ mutation createSquad($squad_number: String!, $class_day: Int!) {
             }
         }
         members {
+            id
             role
             queueNumber
             user {

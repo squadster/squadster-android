@@ -1,4 +1,4 @@
-package com.android.squadster.screenslogic.squads
+package com.android.squadster.screenslogic.usersquad
 
 import android.content.Context
 import android.widget.ImageView
@@ -6,36 +6,37 @@ import com.android.squadster.core.BasePresenter
 import com.android.squadster.core.ErrorHandler
 import com.android.squadster.core.FlowRouter
 import com.android.squadster.core.Screens
-import com.android.squadster.model.system.resource.ResourceManager
-import moxy.InjectViewState
-import javax.inject.Inject
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
-import com.android.squadster.model.data.server.model.*
+import com.android.squadster.model.data.server.model.DraftUserInfo
+import com.android.squadster.model.data.server.model.RequestStatus
+import com.android.squadster.model.data.server.model.ResponseCallback
+import com.android.squadster.model.data.server.model.UserSquad
+import com.android.squadster.model.system.resource.ResourceManager
+import com.android.squadster.screenslogic.squads.SquadsView
 import com.bumptech.glide.Glide
-import com.squadster.server.CreateSquadMutation
 import com.squadster.server.CreateSquadRequestMutation
 import com.squadster.server.DeleteSquadRequestMutation
 import com.squadster.server.GetSquadsQuery
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import moxy.InjectViewState
+import javax.inject.Inject
 
 @InjectViewState
-class SquadsPresenter @Inject constructor(
+class UserSquadPresenter @Inject constructor(
     private val flowRouter: FlowRouter,
     private val errorHandler: ErrorHandler,
     private val resourceManager: ResourceManager,
     private val draftUserInfo: DraftUserInfo,
     private val queriesInteractor: QueriesInteractor
-) : BasePresenter<SquadsView>() {
+) : BasePresenter<UserSquadView>() {
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-
-        getSquads()
+    fun onBackPressed() {
+        flowRouter.finishFlow()
     }
 
-    fun loadUserAvatar(context: Context?, view: ImageView) {
+    /*fun loadUserAvatar(context: Context?, view: ImageView) {
         if (context != null) {
             Glide.with(context)
                 .load(draftUserInfo.userInfo?.imageUrl)
@@ -139,5 +140,5 @@ class SquadsPresenter @Inject constructor(
                     }
                 })
         }
-    }
+    }*/
 }

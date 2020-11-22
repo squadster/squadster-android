@@ -12,4 +12,17 @@
     <string name="commander">Командир</string>
     <string name="squad_number">Номер</string>
     <string name="no_squads">Список взводов пуст</string>
+    <string name="create_squad">Создать взвод</string>
+    <string name="number">Номер взвода</string>
+    <string name="class_day">День занятий</string>
+
+    <string-array name="days">
+        <item>Понедельник</item>
+        <item>Вторник</item>
+        <item>Среда</item>
+        <item>Четверг</item>
+        <item>Пятница</item>
+        <item>Суббота</item>
+        <item>Воскресенье</item>
+    </string-array>
 </resources>

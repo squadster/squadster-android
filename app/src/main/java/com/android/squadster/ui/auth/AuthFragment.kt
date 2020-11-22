@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.webkit.*
+import androidx.fragment.app.FragmentActivity
 import com.android.squadster.BuildConfig
 import com.android.squadster.R
 import com.android.squadster.core.BaseFragment
@@ -37,6 +38,25 @@ class AuthFragment : BaseFragment(), AuthView {
         super.onViewCreated(view, savedInstanceState)
 
         setupViews()
+    }
+
+    override fun showErrorMessage(message: String) {
+        activity?.runOnUiThread {
+            txt_error.text = message
+            txt_error.visibility = View.VISIBLE
+        }
+    }
+
+    override fun goToSquadsScreen() {
+        activity?.runOnUiThread {
+            authPresenter.goToSquadsScreen()
+        }
+    }
+
+    override fun goToUserSquadScreen() {
+        activity?.runOnUiThread {
+            authPresenter.goToUserSquadScreen()
+        }
     }
 
     private fun showErrorMessage() {

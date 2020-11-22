@@ -37,14 +37,14 @@ class ProfilePresenter @Inject constructor(
     fun loadUserAvatar(context: Context?, view: ImageView) {
         if (context != null) {
             Glide.with(context)
-                .load(draftUserInfo.userInfo?.user?.imageUrl)
+                .load(draftUserInfo.userInfo?.imageUrl)
                 .circleCrop()
                 .into(view)
 
             viewState.showUserInfo(
-                draftUserInfo.userInfo?.user?.firstName + " " + draftUserInfo.userInfo?.user?.lastName,
-                draftUserInfo.userInfo?.user?.birthDate ?: "",
-                draftUserInfo.userInfo?.user?.university + " " + draftUserInfo.userInfo?.user?.faculty
+                draftUserInfo.userInfo?.firstName + " " + draftUserInfo.userInfo?.lastName,
+                draftUserInfo.userInfo?.birthDate.toString(),
+                draftUserInfo.userInfo?.university + " " + draftUserInfo.userInfo?.faculty
             )
         }
     }

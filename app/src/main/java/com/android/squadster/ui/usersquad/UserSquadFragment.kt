@@ -1,4 +1,4 @@
-package com.android.squadster.ui.squads
+package com.android.squadster.ui.usersquad
 
 import android.os.Bundle
 import android.view.View
@@ -9,6 +9,8 @@ import com.android.squadster.core.BaseFragment
 import com.android.squadster.model.data.server.model.RequestStatus
 import com.android.squadster.screenslogic.squads.SquadsPresenter
 import com.android.squadster.screenslogic.squads.SquadsView
+import com.android.squadster.screenslogic.usersquad.UserSquadPresenter
+import com.android.squadster.screenslogic.usersquad.UserSquadView
 import com.android.squadster.ui.squads.dialog.CreateSquadDialog
 import com.android.squadster.ui.squads.recyclerview.OnClickItem
 import com.android.squadster.ui.squads.recyclerview.SquadsAdapter
@@ -18,24 +20,22 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import toothpick.Scope
 
-class SquadsFragment : BaseFragment(), SquadsView, OnClickItem {
+class UserSquadFragment : BaseFragment(), UserSquadView {
 
-    override val layoutRes = R.layout.fragment_squads
-
-    private lateinit var squadsAdapter: SquadsAdapter
+    override val layoutRes = R.layout.fragment_user_squad
 
     override fun installScopeModules(scope: Scope) {
     }
 
     @InjectPresenter
-    lateinit var squadsPresenter: SquadsPresenter
+    lateinit var userSquadPresenter: UserSquadPresenter
 
     @ProvidePresenter
-    fun providePresenter(): SquadsPresenter =
-        scope.getInstance(SquadsPresenter::class.java)
+    fun providePresenter(): UserSquadPresenter =
+        scope.getInstance(UserSquadPresenter::class.java)
 
     override fun onBackPressed() {
-        squadsPresenter.onBackPressed()
+        userSquadPresenter.onBackPressed()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickItem {
         setupViews()
     }
 
-    override fun setSquads(squads: List<GetSquadsQuery.Squad>) {
+    /*override fun setSquads(squads: List<GetSquadsQuery.Squad>) {
         srl_update_squads_list.isRefreshing = false
         activity?.runOnUiThread {
             if (squads.isEmpty()) {
@@ -88,10 +88,10 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickItem {
 
     override fun cancelRequest(requestId: String?) {
         squadsPresenter.cancelRequest(requestId)
-    }
+    }*/
 
     private fun setupViews() {
-        squadsPresenter.loadUserAvatar(context, iv_profile)
+        /*squadsPresenter.loadUserAvatar(context, iv_profile)
 
         iv_profile.setOnClickListener {
             squadsPresenter.goToProfile()
@@ -109,10 +109,10 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickItem {
         squadsAdapter = SquadsAdapter(this, squadsPresenter.getCurrentUserId())
         val llManager = LinearLayoutManager(context)
         rv_squads.layoutManager = llManager
-        rv_squads.adapter = squadsAdapter
+        rv_squads.adapter = squadsAdapter*/
     }
 
-    private fun createSquad(squadNumber: String, classDay:Int){
+    /*private fun createSquad(squadNumber: String, classDay:Int){
         squadsPresenter.createSquad(squadNumber, classDay)
-    }
+    }*/
 }

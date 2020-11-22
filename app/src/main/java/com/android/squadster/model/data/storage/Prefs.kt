@@ -12,18 +12,11 @@ class Prefs @Inject constructor(
 
     private val APP_DATA = "app_data"
     private val KEY_TOKEN = "token"
-    private val KEY_CURRENT_USER_ID = "user_id"
     private val appPrefs by lazy { getSharedPreferences() }
 
     var accessToken: String?
         get() = appPrefs.getString(KEY_TOKEN, "")
         set(value) {
             appPrefs.edit().putString(KEY_TOKEN, value ?: "").apply()
-        }
-
-    var currentUserId: String?
-        get() = appPrefs.getString(KEY_CURRENT_USER_ID, "")
-        set(value) {
-            appPrefs.edit().putString(KEY_CURRENT_USER_ID, value ?: "").apply()
         }
 }
