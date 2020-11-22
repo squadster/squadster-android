@@ -15,9 +15,7 @@ import com.android.squadster.model.data.server.model.UserSquad
 import com.android.squadster.model.system.resource.ResourceManager
 import com.android.squadster.screenslogic.squads.SquadsView
 import com.bumptech.glide.Glide
-import com.squadster.server.CreateSquadRequestMutation
-import com.squadster.server.DeleteSquadRequestMutation
-import com.squadster.server.GetSquadsQuery
+import com.squadster.server.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -73,49 +71,43 @@ class UserSquadPresenter @Inject constructor(
         flowRouter.navigateTo(Screens.ProfileScreen)
     }
 
-    fun deleteMember(id: Int) {
+    fun deleteMember(id: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            /*queriesInteractor.createSquadRequest(
-                squadId,
-                object : ResponseCallback<CreateSquadRequestMutation.Data> {
+            queriesInteractor.deleteMember(
+                id,
+                object : ResponseCallback<DeleteSquadMemberMutation.Data> {
 
-                    override fun success(data: CreateSquadRequestMutation.Data) {
-                        if (data.createSquadRequest?.squad?.id != null) {
-                            viewState.updateSquadInvitation(
-                                data.createSquadRequest.squad.id,
-                                data.createSquadRequest.id,
-                                RequestStatus.SEND
-                            )
+                    override fun success(data: DeleteSquadMemberMutation.Data) {
+                        if (data.deleteSquadMember?.id != null) {
+
                         }
                     }
 
                     override fun error(error: String) {
                         viewState.showErrorMessage(error)
                     }
-                })*/
+                })
         }
     }
 
-    fun updateMemberRole(id: Int, role: String, quequeNumber: Int) {
+    fun updateMemberRole(id: String, role: String, quequeNumber: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            /*queriesInteractor.createSquadRequest(
-                squadId,
-                object : ResponseCallback<CreateSquadRequestMutation.Data> {
+            queriesInteractor.updateMemberRole(
+                id,
+                role,
+                quequeNumber,
+                object : ResponseCallback<UpdateSquadMemberMutation.Data> {
 
-                    override fun success(data: CreateSquadRequestMutation.Data) {
-                        if (data.createSquadRequest?.squad?.id != null) {
-                            viewState.updateSquadInvitation(
-                                data.createSquadRequest.squad.id,
-                                data.createSquadRequest.id,
-                                RequestStatus.SEND
-                            )
+                    override fun success(data: UpdateSquadMemberMutation.Data) {
+                        if (data.updateSquadMember?.id != null) {
+
                         }
                     }
 
                     override fun error(error: String) {
                         viewState.showErrorMessage(error)
                     }
-                })*/
+                })
         }
     }
 

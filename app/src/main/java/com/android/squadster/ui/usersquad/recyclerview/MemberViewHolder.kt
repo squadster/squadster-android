@@ -43,7 +43,7 @@ class MemberViewHolder(
             }
             itemView.iv_delete.setOnClickListener {
                 member.id.let {
-                    handler.deleteMember(member.id.toInt())
+                    handler.deleteMember(member.id)
                 }
             }
         } else {
