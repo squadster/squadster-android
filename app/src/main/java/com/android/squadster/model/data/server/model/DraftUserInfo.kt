@@ -47,7 +47,7 @@ data class Request(
 
 data class Member(
     val id: String,
-    val role: Any?,
+    var role: Any?,
     val queueNumber: Int?,
     val user: UserMember?
 )

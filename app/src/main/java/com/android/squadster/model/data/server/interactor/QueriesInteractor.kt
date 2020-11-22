@@ -107,6 +107,52 @@ class QueriesInteractor @Inject constructor(
             })
     }
 
+    fun deleteMember(
+        id: String,
+        callback: ResponseCallback<DeleteSquadMemberMutation.Data>
+    ) {
+        apolloProvider.getClient().mutate(DeleteSquadMemberMutation(id = id))
+            ?.enqueue(object : ApolloCall.Callback<DeleteSquadMemberMutation.Data>() {
+                override fun onResponse(response: Response<DeleteSquadMemberMutation.Data>) {
+                    response.data?.let {
+                        callback.success(it)
+                    } ?: run {
+                        callback.error(resourceManager.getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(e: ApolloException) {
+                    callback.error(
+                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
+                    )
+                }
+            })
+    }
+
+    fun updateMemberRole(
+        id: String,
+        role: String,
+        quequeNumber: Int,
+        callback: ResponseCallback<UpdateSquadMemberMutation.Data>
+    ) {
+        apolloProvider.getClient().mutate(UpdateSquadMemberMutation(id = id, role = role, quequeNumber = quequeNumber))
+            ?.enqueue(object : ApolloCall.Callback<UpdateSquadMemberMutation.Data>() {
+                override fun onResponse(response: Response<UpdateSquadMemberMutation.Data>) {
+                    response.data?.let {
+                        callback.success(it)
+                    } ?: run {
+                        callback.error(resourceManager.getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(e: ApolloException) {
+                    callback.error(
+                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
+                    )
+                }
+            })
+    }
+
     fun createSquad(
         squadNumber: String,
         classDay: Int,

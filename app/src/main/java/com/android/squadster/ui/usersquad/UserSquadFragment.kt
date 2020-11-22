@@ -5,7 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.squadster.R
 import com.android.squadster.core.BaseFragment
@@ -14,6 +14,7 @@ import com.android.squadster.screenslogic.usersquad.UserSquadView
 import com.android.squadster.ui.usersquad.recyclerview.MembersAdapter
 import com.android.squadster.ui.usersquad.recyclerview.OnClickSquadMember
 import kotlinx.android.synthetic.main.fragment_user_squad.*
+import kotlinx.coroutines.channels.consumesAll
 import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -105,12 +106,30 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
         squadsPresenter.cancelRequest(requestId)
     }*/
 
-    override fun deleteMember(id: Int) {
+    override fun deleteMember(id: String) {
         userSquadPresenter.deleteMember(id)
     }
 
-    override fun updateMemberRole(id: Int, role: String, quequeNumber: Int) {
+    override fun updateMemberRole(id: String, role: String, quequeNumber: Int) {
         userSquadPresenter.updateMemberRole(id, role, quequeNumber)
+    }
+
+    override fun showErrorMessage(message: String) {
+        activity?.runOnUiThread {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun deleteSquadMember(id: String) {
+        activity?.runOnUiThread {
+            membersAdapter.deleteMember(id)
+        }
+    }
+
+    override fun updateSquadMemberRole(id: String, role: String, queueNumber: Int) {
+        activity?.runOnUiThread {
+            membersAdapter.updateMember(id, role, queueNumber)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

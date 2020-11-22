@@ -2,7 +2,7 @@ package com.android.squadster.ui.usersquad.recyclerview
 
 interface OnClickSquadMember {
 
-    fun deleteMember(id: Int)
+    fun deleteMember(id: String)
 
-    fun updateMemberRole(id: Int, role: String, quequeNumber: Int)
+    fun updateMemberRole(id: String, role: String, quequeNumber: Int)
 }

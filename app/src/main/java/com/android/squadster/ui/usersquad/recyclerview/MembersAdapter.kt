@@ -37,11 +37,27 @@ class MembersAdapter(
         }
     }
 
-    fun updateMember(id: Int, role: String, quequeNumber: Int) {
+    fun updateMember(id: String, role: String, queueNumber: Int) {
+        val member = members.find {
+            it.queueNumber == queueNumber
+        }
 
+        if (member != null) {
+            val index = members.indexOf(member)
+            member.role = role
+            notifyItemChanged(index)
+        }
     }
 
-    fun deleteMember(id: Int) {
+    fun deleteMember(id: String) {
+        val member = members.find {
+            it.id == id
+        }
 
+        if (member != null) {
+            val index = members.indexOf(member)
+            members.remove(member)
+            notifyItemChanged(index)
+        }
     }
 }
