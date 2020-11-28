@@ -24,7 +24,7 @@ class SquadsPresenter @Inject constructor(
     private val flowRouter: FlowRouter,
     private val errorHandler: ErrorHandler,
     private val resourceManager: ResourceManager,
-    private val draftUserInfo: DraftUserInfo,
+    val draftUserInfo: DraftUserInfo,
     private val queriesInteractor: QueriesInteractor
 ) : BasePresenter<SquadsView>() {
 
@@ -33,6 +33,7 @@ class SquadsPresenter @Inject constructor(
 
         getSquads()
     }
+
     fun loadUserAvatar(context: Context, view: ImageView) {
         Glide.with(context)
             .load(draftUserInfo.currentUserInfo?.imageUrl)
@@ -48,8 +49,8 @@ class SquadsPresenter @Inject constructor(
         flowRouter.finishFlow()
     }
 
-    fun getCurrentUserId(): String {
-        return draftUserInfo.currentUserInfo?.id ?: ""
+    fun goToUserSquad() {
+        flowRouter.replaceScreen(Screens.UserSquadScreen)
     }
 
     fun getSquads() {
@@ -127,7 +128,8 @@ class SquadsPresenter @Inject constructor(
                 object : ResponseCallback<UserSquad> {
 
                     override fun success(data: UserSquad) {
-
+                        draftUserInfo.currentUserInfo?.squadMember?.squad = data
+                        viewState.goToUserSquad()
                     }
 
                     override fun error(error: String) {

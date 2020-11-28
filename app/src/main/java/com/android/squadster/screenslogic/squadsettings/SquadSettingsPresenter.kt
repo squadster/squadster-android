@@ -32,6 +32,10 @@ class SquadSettingsPresenter @Inject constructor(
         flowRouter.exit()
     }
 
+    fun goToSquads() {
+        flowRouter.replaceScreen(Screens.SquadsScreen)
+    }
+
     fun getClassDay(): Pair<String, Int> {
 
         return when (draftUserInfo.currentUserInfo?.squadMember?.squad?.classDay?.toLowerCase(Locale.getDefault())) {
@@ -101,7 +105,7 @@ class SquadSettingsPresenter @Inject constructor(
 
                 override fun success(data: Boolean) {
                     draftUserInfo.currentUserInfo?.squadMember?.squad = null
-                    flowRouter.replaceScreen(Screens.SquadsScreen)
+                    viewState.deleteSquad()
                 }
 
                 override fun error(error: String) {
@@ -141,7 +145,7 @@ class SquadSettingsPresenter @Inject constructor(
                     if (request != null) {
                         draftUserInfo.currentUserInfo?.squadMember?.squad?.requests?.remove(request)
                     }
-                    viewState.updateRequest(id ?: "")
+                    viewState.updateRequest(id)
                 }
 
                 override fun error(error: String) {

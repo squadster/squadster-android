@@ -11,4 +11,7 @@ interface SquadSettingsView : MvpView {
 
     @AddToEnd
     fun updateRequest(id: String)
+
+    @AddToEnd
+    fun deleteSquad()
 }

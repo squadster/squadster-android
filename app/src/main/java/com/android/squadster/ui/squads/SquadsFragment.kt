@@ -67,6 +67,12 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickSquad {
         }
     }
 
+    override fun goToUserSquad() {
+        activity?.runOnUiThread {
+            squadsPresenter.goToUserSquad()
+        }
+    }
+
     override fun showErrorMessage(message: String) {
         srl_update_squads_list.isRefreshing = false
         activity?.runOnUiThread {
@@ -106,7 +112,7 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickSquad {
             createSquadDialog.show()
         }
 
-        squadsAdapter = SquadsAdapter(this, squadsPresenter.getCurrentUserId())
+        squadsAdapter = SquadsAdapter(this, squadsPresenter.draftUserInfo.currentUserInfo?.id ?: "")
         val llManager = LinearLayoutManager(context)
         rv_squads.layoutManager = llManager
         rv_squads.adapter = squadsAdapter

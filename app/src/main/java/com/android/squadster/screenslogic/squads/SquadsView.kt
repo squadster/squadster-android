@@ -19,4 +19,7 @@ interface SquadsView : MvpView {
 
     @AddToEnd
     fun updateSquadInvitation(squadId: String, requestId: String, requestStatus: RequestStatus)
+
+    @AddToEnd
+    fun goToUserSquad()
 }

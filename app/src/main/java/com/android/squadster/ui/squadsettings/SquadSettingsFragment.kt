@@ -70,6 +70,12 @@ class SquadSettingsFragment : BaseFragment(), SquadSettingsView, OnClickRequest 
         }
     }
 
+    override fun deleteSquad() {
+        activity?.runOnUiThread {
+            squadSettingsPresenter.goToSquads()
+        }
+    }
+
     private fun setupViews() {
         val squadNumber =
             squadSettingsPresenter.draftUserInfo.currentUserInfo?.squadMember?.squad?.squadNumber
