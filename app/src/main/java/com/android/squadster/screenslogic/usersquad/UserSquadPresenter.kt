@@ -1,7 +1,5 @@
 package com.android.squadster.screenslogic.usersquad
 
-import android.content.Context
-import android.widget.ImageView
 import com.android.squadster.R
 import com.android.squadster.core.BasePresenter
 import com.android.squadster.core.ErrorHandler
@@ -9,12 +7,8 @@ import com.android.squadster.core.FlowRouter
 import com.android.squadster.core.Screens
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
 import com.android.squadster.model.data.server.model.DraftUserInfo
-import com.android.squadster.model.data.server.model.RequestStatus
 import com.android.squadster.model.data.server.model.ResponseCallback
-import com.android.squadster.model.data.server.model.UserSquad
 import com.android.squadster.model.system.resource.ResourceManager
-import com.android.squadster.screenslogic.squads.SquadsView
-import com.bumptech.glide.Glide
 import com.squadster.server.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -32,15 +26,11 @@ class UserSquadPresenter @Inject constructor(
     private val queriesInteractor: QueriesInteractor
 ) : BasePresenter<UserSquadView>() {
 
-    fun onBackPressed() {
-        flowRouter.finishFlow()
-    }
-
     fun isCurrentUserCommander(): Boolean {
         var isCurrentUserCommander = false
 
-        draftUserInfo.userInfo?.squadMember?.squad?.members?.forEach { member ->
-            if (member.id == draftUserInfo.userInfo?.id) {
+        draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.forEach { member ->
+            if (member.id == draftUserInfo.currentUserInfo?.id) {
                 isCurrentUserCommander = true
                 return@forEach
             }
@@ -51,7 +41,7 @@ class UserSquadPresenter @Inject constructor(
 
     fun getClassDay(): String {
 
-        return when (draftUserInfo.userInfo?.squadMember?.squad?.classDay?.toLowerCase(Locale.getDefault())) {
+        return when (draftUserInfo.currentUserInfo?.squadMember?.squad?.classDay?.toLowerCase(Locale.getDefault())) {
             "monday" -> resourceManager.getString(R.string.monday)
             "tuesday" -> resourceManager.getString(R.string.tuesday)
             "wednesday" -> resourceManager.getString(R.string.wednesday)
@@ -61,6 +51,14 @@ class UserSquadPresenter @Inject constructor(
             "sunday" -> resourceManager.getString(R.string.sunday)
             else -> resourceManager.getString(R.string.unknown_class_day)
         }
+    }
+
+    fun onBackPressed() {
+        flowRouter.finishFlow()
+    }
+
+    fun goToSquadSettings() {
+        flowRouter.navigateTo(Screens.SquadSettings)
     }
 
     fun goToSquads() {
@@ -79,7 +77,13 @@ class UserSquadPresenter @Inject constructor(
 
                     override fun success(data: DeleteSquadMemberMutation.Data) {
                         if (data.deleteSquadMember?.id != null) {
-
+                            val member = draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.find {
+                                it.id == data.deleteSquadMember.id
+                            }
+                            if (member != null) {
+                                draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.remove(member)
+                                viewState.deleteSquadMember(data.deleteSquadMember.id)
+                            }
                         }
                     }
 
@@ -100,7 +104,22 @@ class UserSquadPresenter @Inject constructor(
 
                     override fun success(data: UpdateSquadMemberMutation.Data) {
                         if (data.updateSquadMember?.id != null) {
-
+                            val member = draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.find {
+                                it.id == data.updateSquadMember.id
+                            }
+                            if (member != null) {
+                                val index = draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.indexOf(member)
+                                member.queueNumber = data.updateSquadMember.queueNumber
+                                member.role = data.updateSquadMember.role
+                                if (index != null) {
+                                    draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.set(index, member)
+                                    viewState.updateSquadMemberRole(
+                                        data.updateSquadMember.id,
+                                        data.updateSquadMember.role.toString(),
+                                        data.updateSquadMember.queueNumber ?: 0
+                                    )
+                                }
+                            }
                         }
                     }
 

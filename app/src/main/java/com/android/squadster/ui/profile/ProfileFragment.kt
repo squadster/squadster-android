@@ -38,22 +38,35 @@ class ProfileFragment : BaseFragment(), ProfileView {
         setupViews()
     }
 
-    override fun showUserInfo(nameAndSurname: String, birthday: String, faculty: String) {
-        tv_name.text = nameAndSurname
-        tv_birthday.text = birthday
-        tv_faculty.text = faculty
-    }
-
     private fun setupViews() {
-        profilePresenter.loadUserAvatar(context, iv_avatar)
+        profilePresenter.draftUserInfo.anotherUser?.let { user ->
+            profilePresenter.loadUserAvatar(context, iv_avatar, user.imageUrl)
 
-        btn_log_out.setOnClickListener {
-            profilePresenter.logOut(context)
+            tv_name.text = user.firstName + " " + user.lastName
+            tv_birthday.text = profilePresenter.draftUserInfo.currentUserInfo?.birthDate.toString()
+            tv_faculty.text = user.university + " " + user.faculty
+
+            btn_log_out.visibility = View.GONE
+            btn_about_us.visibility = View.GONE
+        } ?: run {
+            profilePresenter.loadUserAvatar(context, iv_avatar, profilePresenter.draftUserInfo.currentUserInfo?.imageUrl)
+
+            tv_name.text =
+                profilePresenter.draftUserInfo.currentUserInfo?.firstName + " " + profilePresenter.draftUserInfo.currentUserInfo?.lastName
+            tv_birthday.text = profilePresenter.draftUserInfo.currentUserInfo?.birthDate.toString()
+            tv_faculty.text =
+                profilePresenter.draftUserInfo.currentUserInfo?.university + " " + profilePresenter.draftUserInfo.currentUserInfo?.faculty
+
+            btn_log_out.setOnClickListener {
+                profilePresenter.logOut(context)
+            }
+
+            btn_about_us.setOnClickListener {
+
+            }
         }
 
-        btn_about_us.setOnClickListener {
-
-        }
+        profilePresenter.draftUserInfo.anotherUser = null
 
         toolbar_profile.setNavigationOnClickListener {
             profilePresenter.onBackPressed()

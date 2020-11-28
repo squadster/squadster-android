@@ -12,7 +12,6 @@ import javax.inject.Inject
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
 import com.android.squadster.model.data.server.model.*
 import com.bumptech.glide.Glide
-import com.squadster.server.CreateSquadMutation
 import com.squadster.server.CreateSquadRequestMutation
 import com.squadster.server.DeleteSquadRequestMutation
 import com.squadster.server.GetSquadsQuery
@@ -36,7 +35,7 @@ class SquadsPresenter @Inject constructor(
     }
     fun loadUserAvatar(context: Context, view: ImageView) {
         Glide.with(context)
-            .load(draftUserInfo.userInfo?.imageUrl)
+            .load(draftUserInfo.currentUserInfo?.imageUrl)
             .circleCrop()
             .into(view)
     }
@@ -50,7 +49,7 @@ class SquadsPresenter @Inject constructor(
     }
 
     fun getCurrentUserId(): String {
-        return draftUserInfo.userInfo?.id ?: ""
+        return draftUserInfo.currentUserInfo?.id ?: ""
     }
 
     fun getSquads() {

@@ -1,21 +1,15 @@
 package com.android.squadster.screenslogic.auth
 
-import android.util.Log
 import com.android.squadster.core.BasePresenter
 import com.android.squadster.core.FlowRouter
 import com.android.squadster.core.Screens
-import com.android.squadster.di.provider.ApolloProvider
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
 import com.android.squadster.model.data.server.model.Auth
 import com.android.squadster.model.data.server.model.DraftUserInfo
 import com.android.squadster.model.data.server.model.ResponseCallback
 import com.android.squadster.model.data.server.model.UserInfo
 import com.android.squadster.model.data.storage.Prefs
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.coroutines.toDeferred
 import com.google.gson.Gson
-import com.squadster.server.GetCurrentUserQuery
-import com.squadster.server.GetSquadsQuery
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -47,7 +41,7 @@ class AuthPresenter @Inject constructor(
             queriesInteractor.getCurrentUserInfo(object : ResponseCallback<UserInfo> {
 
                 override fun success(data: UserInfo) {
-                    draftUserInfo.userInfo = data
+                    draftUserInfo.currentUserInfo = data
 
                     if (data.squadMember?.squad == null) {
                         viewState.goToSquadsScreen()

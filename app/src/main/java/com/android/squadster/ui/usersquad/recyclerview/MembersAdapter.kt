@@ -23,7 +23,7 @@ class MembersAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as MemberViewHolder).bindItem(members[position], position)
+        (holder as MemberViewHolder).bindItem(members[position])
     }
 
     override fun getItemCount(): Int {
@@ -56,7 +56,7 @@ class MembersAdapter(
         if (member != null) {
             val index = members.indexOf(member)
             members.remove(member)
-            notifyItemChanged(index)
+            notifyItemRemoved(index)
         }
     }
 }

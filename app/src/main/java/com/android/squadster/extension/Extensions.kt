@@ -1,6 +1,7 @@
 package com.android.squadster.extension
 
 import com.android.squadster.model.data.server.model.*
+import com.squadster.server.ApproveSquadRequestMutation
 import com.squadster.server.CreateSquadMutation
 import com.squadster.server.GetCurrentUserQuery
 import com.squadster.server.GetSquadsQuery
@@ -93,6 +94,30 @@ fun GetCurrentUserQuery.Member.toMember(): Member {
         role,
         queueNumber,
         user?.toUserMember()
+    )
+}
+
+fun ApproveSquadRequestMutation.ApproveSquadRequest.toMember(): Member {
+    return Member(
+        id,
+        role,
+        queueNumber,
+        user?.toUserMember()
+    )
+}
+
+fun ApproveSquadRequestMutation.User.toUserMember(): UserMember {
+    return UserMember(
+        id,
+        firstName,
+        lastName,
+        mobilePhone,
+        faculty,
+        university,
+        imageUrl,
+        smallImageUrl,
+        vkUrl,
+        birthDate
     )
 }
 

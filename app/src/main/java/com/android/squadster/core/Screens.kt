@@ -4,6 +4,7 @@ import com.android.squadster.ui.MainFlowFragment
 import com.android.squadster.ui.auth.AuthFragment
 import com.android.squadster.ui.profile.ProfileFragment
 import com.android.squadster.ui.squads.SquadsFragment
+import com.android.squadster.ui.squadsettings.SquadSettingsFragment
 import com.android.squadster.ui.usersquad.UserSquadFragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
@@ -32,5 +33,10 @@ object Screens {
     object UserSquadScreen : SupportAppScreen() {
 
         override fun getFragment() = UserSquadFragment()
+    }
+
+    object SquadSettings : SupportAppScreen() {
+
+        override fun getFragment() = SquadSettingsFragment()
     }
 }

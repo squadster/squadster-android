@@ -3,6 +3,7 @@
     <string name="profile">Профиль</string>
     <string name="log_out">Выйти</string>
     <string name="about_us">О нас</string>
+    <string name="squad_profile">Профиль взвода</string>
 
     <string name="network_error">Network error</string>
     <string name="timeout_error">Timeout error</string>
@@ -14,6 +15,7 @@
     <string name="create_squad">Создать взвод</string>
     <string name="number">Номер взвода</string>
     <string name="class_day">День занятий:\n%s</string>
+    <string name="class_day_settings">День занятий: %s</string>
     <string name="squads">Взводы</string>
     <string name="user_squad">Взвод №%s</string>
     <string name="announcement">Объявление:\n%s</string>
@@ -21,6 +23,16 @@
     <string name="unknown_squad_number">####</string>
     <string name="unknown_class_day">Не известно</string>
     <string name="none_announcement">Здесь пока ничего нет</string>
+    <string name="delete_squad">Расформировать взвод</string>
+    <string name="turn_on_link_invitation">Включить доступ по ссылке</string>
+    <string name="turn_off_link_invitation">Выключить доступ по ссылке</string>
+    <string name="need_confirmation">Нужно подтверждение!</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="requests">Запросы на вступление</string>
+    <string name="requests_empty">Запросов нет</string>
+    <string name="choose_role">Выберите новую должность для члена взвода</string>
+    <string name="delete_squad_message">Вы уверены что хотите удалить взвод? Все студенты автоматически покинут его. Вы можете передать командование другому студенту и покинуть взвод</string>
 
     <string name="monday">Понедельник</string>
     <string name="tuesday">Вторник</string>
@@ -31,9 +43,9 @@
     <string name="sunday">Воскресенье</string>
 
     <string name="commander">Командир</string>
-    <string name="second_in_command">Зам. командира</string>
+    <string name="deputy_commander">Зам.командира</string>
     <string name="journalist">Журналист</string>
-    <string name="soldier">Солдат</string>
+    <string name="student">Студент</string>
 
     <string-array name="days">
         <item>Понедельник</item>

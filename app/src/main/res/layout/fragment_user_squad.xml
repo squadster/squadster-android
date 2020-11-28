@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -19,10 +20,11 @@
         android:id="@+id/txt_class_day"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="12dp"
         android:textColor="@color/black"
         android:textSize="24sp"
+        tools:text="День занятий:\nПонедельник"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +37,12 @@
         android:layout_marginTop="52dp"
         android:textColor="@color/black"
         android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:textSize="24sp"
+        tools:text="Объявление:\nЗдесь пока ничего нет Много много текста"
+        android:background="@drawable/background_with_black_borders"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

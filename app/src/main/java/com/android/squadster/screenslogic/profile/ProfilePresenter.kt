@@ -7,12 +7,10 @@ import android.widget.ImageView
 import com.android.squadster.core.BasePresenter
 import com.android.squadster.core.ErrorHandler
 import com.android.squadster.core.FlowRouter
-import com.android.squadster.core.Screens
 import com.android.squadster.model.data.server.model.DraftUserInfo
 import com.android.squadster.model.system.resource.ResourceManager
 import com.bumptech.glide.Glide
 import moxy.InjectViewState
-import java.io.File
 import javax.inject.Inject
 
 
@@ -21,7 +19,7 @@ class ProfilePresenter @Inject constructor(
     private val flowRouter: FlowRouter,
     private val errorHandler: ErrorHandler,
     private val resourceManager: ResourceManager,
-    private val draftUserInfo: DraftUserInfo
+    val draftUserInfo: DraftUserInfo
 ) : BasePresenter<ProfileView>() {
 
     fun onBackPressed() {
@@ -34,18 +32,12 @@ class ProfilePresenter @Inject constructor(
         if (result) flowRouter.finishFlow()
     }
 
-    fun loadUserAvatar(context: Context?, view: ImageView) {
+    fun loadUserAvatar(context: Context?, view: ImageView, imageUrl: String?) {
         if (context != null) {
             Glide.with(context)
-                .load(draftUserInfo.userInfo?.imageUrl)
+                .load(imageUrl)
                 .circleCrop()
                 .into(view)
-
-            viewState.showUserInfo(
-                draftUserInfo.userInfo?.firstName + " " + draftUserInfo.userInfo?.lastName,
-                draftUserInfo.userInfo?.birthDate.toString(),
-                draftUserInfo.userInfo?.university + " " + draftUserInfo.userInfo?.faculty
-            )
         }
     }
 }

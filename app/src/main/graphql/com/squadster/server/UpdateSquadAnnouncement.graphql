@@ -1,4 +1,4 @@
-mutation updateSquadAnnouncement($id: ID!, $advertisment: String) {
+mutation updateSquadAnnouncement($id: ID!, $advertisment: String!) {
     updateSquad(
         id: $id,
         advertisment: $advertisment

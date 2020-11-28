@@ -9,12 +9,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.squadster.R
 import com.android.squadster.core.BaseFragment
+import com.android.squadster.model.data.server.model.UserMember
 import com.android.squadster.screenslogic.usersquad.UserSquadPresenter
 import com.android.squadster.screenslogic.usersquad.UserSquadView
+import com.android.squadster.ui.usersquad.dialog.UpdateMemberRoleDialog
 import com.android.squadster.ui.usersquad.recyclerview.MembersAdapter
 import com.android.squadster.ui.usersquad.recyclerview.OnClickSquadMember
 import kotlinx.android.synthetic.main.fragment_user_squad.*
-import kotlinx.coroutines.channels.consumesAll
 import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -60,58 +61,23 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
         }
     }
 
-    /*override fun setSquads(squads: List<GetSquadsQuery.Squad>) {
-        srl_update_squads_list.isRefreshing = false
-        activity?.runOnUiThread {
-            if (squads.isEmpty()) {
-                showEmptyListOfSquads()
-            } else {
-                cl_addition_info.visibility = View.VISIBLE
-                rv_squads.visibility = View.VISIBLE
-                squadsAdapter.setData(ArrayList(squads))
-            }
-        }
-    }
-
-    override fun updateSquadInvitation(
-        squadId: String,
-        requestId: String,
-        requestStatus: RequestStatus
-    ) {
-        activity?.runOnUiThread {
-            squadsAdapter.updateSquad(squadId, requestId, requestStatus)
-        }
-    }
-
-    override fun showErrorMessage(message: String) {
-        srl_update_squads_list.isRefreshing = false
-        activity?.runOnUiThread {
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    override fun showEmptyListOfSquads() {
-        activity?.runOnUiThread {
-            cl_addition_info.visibility = View.GONE
-            rv_squads.visibility = View.GONE
-            tv_no_squads_message.visibility = View.VISIBLE
-        }
-    }
-
-    override fun sendRequest(squadId: String) {
-        squadsPresenter.sendRequest(squadId)
-    }
-
-    override fun cancelRequest(requestId: String?) {
-        squadsPresenter.cancelRequest(requestId)
-    }*/
-
     override fun deleteMember(id: String) {
         userSquadPresenter.deleteMember(id)
     }
 
-    override fun updateMemberRole(id: String, role: String, quequeNumber: Int) {
-        userSquadPresenter.updateMemberRole(id, role, quequeNumber)
+    override fun updateMemberRole(id: String, role: String, quequeNumber: Int?) {
+        val updateMemberRoleDialog = UpdateMemberRoleDialog(
+            requireContext(),
+            id,
+            role,
+            quequeNumber ?: 0,
+            ::updateMember)
+        updateMemberRoleDialog.show()
+    }
+
+    override fun openMemberProfile(member: UserMember?) {
+        userSquadPresenter.draftUserInfo.anotherUser = member
+        userSquadPresenter.goToProfile()
     }
 
     override fun showErrorMessage(message: String) {
@@ -126,16 +92,16 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
         }
     }
 
-    override fun updateSquadMemberRole(id: String, role: String, queueNumber: Int) {
+    override fun updateSquadMemberRole(id: String, role: String, quequeNumber: Int) {
         activity?.runOnUiThread {
-            membersAdapter.updateMember(id, role, queueNumber)
+            membersAdapter.updateMember(id, role, quequeNumber)
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.mi_settings -> {
-
+                userSquadPresenter.goToSquadSettings()
                 true
             }
             R.id.mi_profile -> {
@@ -155,7 +121,7 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
         setHasOptionsMenu(true)
 
         val squadNumber =
-            userSquadPresenter.draftUserInfo.userInfo?.squadMember?.squad?.squadNumber ?: getString(
+            userSquadPresenter.draftUserInfo.currentUserInfo?.squadMember?.squad?.squadNumber ?: getString(
                 R.string.unknown_squad_number
             )
         toolbar_user_squad.title = getString(R.string.user_squad, squadNumber)
@@ -164,7 +130,7 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
         txt_class_day.text = getString(R.string.class_day, classDay)
 
         val announcement =
-            userSquadPresenter.draftUserInfo.userInfo?.squadMember?.squad?.advertisment
+            userSquadPresenter.draftUserInfo.currentUserInfo?.squadMember?.squad?.advertisment
                 ?: getString(
                     R.string.none_announcement
                 )
@@ -173,16 +139,16 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
 
         membersAdapter = MembersAdapter(
             this,
-            userSquadPresenter.draftUserInfo.userInfo?.id ?: "",
-            isCurrentUserCommander
+            userSquadPresenter.draftUserInfo.currentUserInfo?.id ?: "",
+            userSquadPresenter.isCurrentUserCommander()
         )
         val llManager = LinearLayoutManager(context)
         rv_soldiers.layoutManager = llManager
         rv_soldiers.adapter = membersAdapter
-        membersAdapter.setData(userSquadPresenter.draftUserInfo.userInfo?.squadMember?.squad?.members)
+        membersAdapter.setData(userSquadPresenter.draftUserInfo.currentUserInfo?.squadMember?.squad?.members)
     }
 
-    /*private fun createSquad(squadNumber: String, classDay:Int){
-        squadsPresenter.createSquad(squadNumber, classDay)
-    }*/
+    private fun updateMember(id: String, role: String, quequeNumber: Int){
+        userSquadPresenter.updateMemberRole(id, role, quequeNumber)
+    }
 }

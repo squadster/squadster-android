@@ -5,6 +5,4 @@ import moxy.viewstate.strategy.alias.AddToEnd
 
 interface ProfileView : MvpView {
 
-    @AddToEnd
-    fun showUserInfo(nameAndSurname: String, birthday: String, faculty: String)
 }

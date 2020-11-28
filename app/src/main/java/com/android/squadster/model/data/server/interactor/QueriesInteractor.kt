@@ -13,10 +13,6 @@ import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.squadster.server.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class QueriesInteractor @Inject constructor(
@@ -135,7 +131,8 @@ class QueriesInteractor @Inject constructor(
         quequeNumber: Int,
         callback: ResponseCallback<UpdateSquadMemberMutation.Data>
     ) {
-        apolloProvider.getClient().mutate(UpdateSquadMemberMutation(id = id, role = role, quequeNumber = quequeNumber))
+        apolloProvider.getClient()
+            .mutate(UpdateSquadMemberMutation(id = id, role = role, quequeNumber = quequeNumber))
             ?.enqueue(object : ApolloCall.Callback<UpdateSquadMemberMutation.Data>() {
                 override fun onResponse(response: Response<UpdateSquadMemberMutation.Data>) {
                     response.data?.let {
@@ -163,6 +160,142 @@ class QueriesInteractor @Inject constructor(
                 override fun onResponse(response: Response<CreateSquadMutation.Data>) {
                     response.data?.createSquad?.let {
                         callback.success(it.toUserSquad())
+                    } ?: run {
+                        callback.error(resourceManager.getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(e: ApolloException) {
+                    callback.error(
+                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
+                    )
+                }
+            })
+    }
+
+    fun updateSquadNumber(
+        id: String,
+        number: String,
+        callback: ResponseCallback<String>
+    ) {
+        apolloProvider.getClient().mutate(UpdateSquadNumberMutation(id, number))
+            ?.enqueue(object : ApolloCall.Callback<UpdateSquadNumberMutation.Data>() {
+                override fun onResponse(response: Response<UpdateSquadNumberMutation.Data>) {
+                    response.data?.updateSquad?.squadNumber?.let {
+                        callback.success(it)
+                    } ?: run {
+                        callback.error(resourceManager.getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(e: ApolloException) {
+                    callback.error(
+                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
+                    )
+                }
+            })
+    }
+
+    fun updateSquadClassDay(
+        id: String,
+        classDay: Int,
+        callback: ResponseCallback<String>
+    ) {
+        apolloProvider.getClient().mutate(UpdateSquadClassDayMutation(id, classDay))
+            ?.enqueue(object : ApolloCall.Callback<UpdateSquadClassDayMutation.Data>() {
+                override fun onResponse(response: Response<UpdateSquadClassDayMutation.Data>) {
+                    response.data?.updateSquad?.classDay?.let {
+                        callback.success(it)
+                    } ?: run {
+                        callback.error(resourceManager.getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(e: ApolloException) {
+                    callback.error(
+                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
+                    )
+                }
+            })
+    }
+
+    fun updateSquadAnnouncement(
+        id: String,
+        announcement: String,
+        callback: ResponseCallback<String>
+    ) {
+        apolloProvider.getClient().mutate(UpdateSquadAnnouncementMutation(id, announcement))
+            ?.enqueue(object : ApolloCall.Callback<UpdateSquadAnnouncementMutation.Data>() {
+                override fun onResponse(response: Response<UpdateSquadAnnouncementMutation.Data>) {
+                    response.data?.updateSquad?.advertisment?.let {
+                        callback.success(it)
+                    } ?: run {
+                        callback.error(resourceManager.getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(e: ApolloException) {
+                    callback.error(
+                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
+                    )
+                }
+            })
+    }
+
+    fun deleteSquad(
+        id: String,
+        callback: ResponseCallback<Boolean>
+    ) {
+        apolloProvider.getClient().mutate(DeleteSquadMutation(id))
+            ?.enqueue(object : ApolloCall.Callback<DeleteSquadMutation.Data>() {
+                override fun onResponse(response: Response<DeleteSquadMutation.Data>) {
+                    response.data?.deleteSquad?.id?.let {
+                        callback.success(true)
+                    } ?: run {
+                        callback.error(resourceManager.getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(e: ApolloException) {
+                    callback.error(
+                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
+                    )
+                }
+            })
+    }
+
+    fun updateLinkInvitation(
+        id: String,
+        linkInvitationEnabled: Boolean,
+        callback: ResponseCallback<Boolean>
+    ) {
+        apolloProvider.getClient().mutate(UpdateSquadLinkOptionMutation(id, linkInvitationEnabled))
+            ?.enqueue(object : ApolloCall.Callback<UpdateSquadLinkOptionMutation.Data>() {
+                override fun onResponse(response: Response<UpdateSquadLinkOptionMutation.Data>) {
+                    response.data?.updateSquad?.linkInvitationsEnabled?.let {
+                        callback.success(it)
+                    } ?: run {
+                        callback.error(resourceManager.getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(e: ApolloException) {
+                    callback.error(
+                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
+                    )
+                }
+            })
+    }
+
+    fun acceptRequest(
+        id: String,
+        callback: ResponseCallback<ApproveSquadRequestMutation.ApproveSquadRequest>
+    ) {
+        apolloProvider.getClient().mutate(ApproveSquadRequestMutation(id))
+            ?.enqueue(object : ApolloCall.Callback<ApproveSquadRequestMutation.Data>() {
+                override fun onResponse(response: Response<ApproveSquadRequestMutation.Data>) {
+                    response.data?.approveSquadRequest?.let {
+                        callback.success(it)
                     } ?: run {
                         callback.error(resourceManager.getString(R.string.something_went_wrong))
                     }

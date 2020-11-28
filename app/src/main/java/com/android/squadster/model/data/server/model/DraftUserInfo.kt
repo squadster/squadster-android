@@ -4,7 +4,9 @@ import javax.inject.Inject
 
 class DraftUserInfo @Inject constructor() {
 
-    var userInfo: UserInfo? = null
+    var currentUserInfo: UserInfo? = null
+
+    var anotherUser: UserMember? = null
 }
 
 data class UserInfo(
@@ -32,7 +34,7 @@ data class UserSquad(
     val id: String,
     var advertisment: String?,
     var classDay: String?,
-    val squadNumber: String?,
+    var squadNumber: String?,
     var linkInvitationsEnabled: Boolean?,
     val hashId: String?,
     val requests: ArrayList<Request>?,
