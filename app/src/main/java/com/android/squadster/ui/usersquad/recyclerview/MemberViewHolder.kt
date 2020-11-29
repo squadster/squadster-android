@@ -33,7 +33,9 @@ class MemberViewHolder(
             else -> itemView.context.getString(R.string.student)
         }
         itemView.iv_member_avatar.setOnClickListener {
-            handler.openMemberProfile(member.user)
+            if (currentUserId != member.user?.id) {
+                handler.openMemberProfile(member.user)
+            }
         }
         if (isCurrentUserCommander && currentUserId != member.user?.id) {
             itemView.iv_delete.visibility = View.VISIBLE

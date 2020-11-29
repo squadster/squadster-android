@@ -1,5 +1,6 @@
 package com.android.squadster.ui.usersquad
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -28,8 +29,6 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
 
     private lateinit var membersAdapter: MembersAdapter
 
-    private var isCurrentUserCommander = false
-
     override fun installScopeModules(scope: Scope) {
     }
 
@@ -52,17 +51,16 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_user_squad, menu)
-
-        isCurrentUserCommander = userSquadPresenter.isCurrentUserCommander()
-
-        if (!isCurrentUserCommander) {
-            val item = menu.findItem(R.id.mi_settings)
-            item.isVisible = false
-        }
     }
 
     override fun deleteMember(id: String) {
         userSquadPresenter.deleteMember(id)
+    }
+
+    override fun deleteSquad() {
+        activity?.runOnUiThread {
+            userSquadPresenter.goToSquadsWithoutExit()
+        }
     }
 
     override fun updateMemberRole(id: String, role: String, quequeNumber: Int?) {
@@ -101,7 +99,18 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.mi_settings -> {
-                userSquadPresenter.goToSquadSettings()
+                val isCurrentUserCommander = userSquadPresenter.isCurrentUserCommander()
+                if (isCurrentUserCommander) {
+                    userSquadPresenter.goToSquadSettings()
+                } else {
+                    AlertDialog.Builder(requireActivity())
+                        .setTitle(R.string.need_confirmation)
+                        .setMessage(R.string.delete_squad_user_message)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.yes) { _, _ -> userSquadPresenter.deleteSquad() }
+                        .setNegativeButton(R.string.no) { dialog, _ -> dialog.cancel() }
+                        .show()
+                }
                 true
             }
             R.id.mi_profile -> {

@@ -68,6 +68,10 @@ class UserSquadPresenter @Inject constructor(
         flowRouter.navigateTo(Screens.ProfileScreen)
     }
 
+    fun goToSquadsWithoutExit() {
+        flowRouter.replaceScreen(Screens.SquadsScreen)
+    }
+
     fun deleteMember(id: String) {
         GlobalScope.launch(Dispatchers.IO) {
             queriesInteractor.deleteMember(
@@ -129,37 +133,14 @@ class UserSquadPresenter @Inject constructor(
         }
     }
 
-    /*fun loadUserAvatar(context: Context?, view: ImageView) {
-        if (context != null) {
-            Glide.with(context)
-                .load(draftUserInfo.userInfo?.imageUrl)
-                .circleCrop()
-                .into(view)
-        }
-    }
-
-    fun goToProfile() {
-        flowRouter.navigateTo(Screens.ProfileScreen)
-    }
-
-    fun onBackPressed() {
-        flowRouter.finishFlow()
-    }
-
-    fun getCurrentUserId(): String {
-        return draftUserInfo.userInfo?.id ?: ""
-    }
-
-    fun getSquads() {
+    fun deleteSquad() {
         GlobalScope.launch(Dispatchers.IO) {
-            queriesInteractor.getSquads(object : ResponseCallback<GetSquadsQuery.Data> {
+            val id = draftUserInfo.currentUserInfo?.squadMember?.squad?.id ?: ""
+            queriesInteractor.deleteSquad(id, object : ResponseCallback<Boolean> {
 
-                override fun success(data: GetSquadsQuery.Data) {
-                    if (data.squads != null && data.squads.isNotEmpty()) {
-                        viewState.setSquads(data.squads.filterNotNull())
-                    } else {
-                        viewState.showEmptyListOfSquads()
-                    }
+                override fun success(data: Boolean) {
+                    draftUserInfo.currentUserInfo?.squadMember?.squad = null
+                    viewState.deleteSquad()
                 }
 
                 override fun error(error: String) {
@@ -168,70 +149,4 @@ class UserSquadPresenter @Inject constructor(
             })
         }
     }
-
-    fun sendRequest(squadId: String) {
-        GlobalScope.launch(Dispatchers.IO) {
-            queriesInteractor.createSquadRequest(
-                squadId,
-                object : ResponseCallback<CreateSquadRequestMutation.Data> {
-
-                    override fun success(data: CreateSquadRequestMutation.Data) {
-                        if (data.createSquadRequest?.squad?.id != null) {
-                            viewState.updateSquadInvitation(
-                                data.createSquadRequest.squad.id,
-                                data.createSquadRequest.id,
-                                RequestStatus.SEND
-                            )
-                        }
-                    }
-
-                    override fun error(error: String) {
-                        viewState.showErrorMessage(error)
-                    }
-                })
-        }
-    }
-
-    fun cancelRequest(requestId: String?) {
-        requestId?.let {
-            GlobalScope.launch(Dispatchers.IO) {
-                queriesInteractor.deleteSquadRequest(
-                    requestId,
-                    object : ResponseCallback<DeleteSquadRequestMutation.Data> {
-
-                        override fun success(data: DeleteSquadRequestMutation.Data) {
-                            if (data.deleteSquadRequest?.id != null) {
-                                viewState.updateSquadInvitation(
-                                    data.deleteSquadRequest.squad?.id ?: "",
-                                    data.deleteSquadRequest.id,
-                                    RequestStatus.CANCEL
-                                )
-                            }
-                        }
-
-                        override fun error(error: String) {
-                            viewState.showErrorMessage(error)
-                        }
-                    })
-            }
-        }
-    }
-
-    fun createSquad(squadNumber: String, classDay: Int) {
-        GlobalScope.launch(Dispatchers.IO) {
-            queriesInteractor.createSquad(
-                squadNumber,
-                classDay,
-                object : ResponseCallback<UserSquad> {
-
-                    override fun success(data: UserSquad) {
-
-                    }
-
-                    override fun error(error: String) {
-                        viewState.showErrorMessage(error)
-                    }
-                })
-        }
-    }*/
 }

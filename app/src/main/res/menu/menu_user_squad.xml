@@ -15,5 +15,4 @@
         android:id="@+id/mi_squads"
         app:showAsAction="never"
         android:title="@string/squads"/>
-
 </menu>

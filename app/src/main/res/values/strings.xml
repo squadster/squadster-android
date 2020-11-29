@@ -33,6 +33,7 @@
     <string name="requests_empty">Запросов нет</string>
     <string name="choose_role">Выберите новую должность для члена взвода</string>
     <string name="delete_squad_message">Вы уверены что хотите удалить взвод? Все студенты автоматически покинут его. Вы можете передать командование другому студенту и покинуть взвод</string>
+    <string name="delete_squad_user_message">Вы уверены, что хотите покинуть взвод?</string>
 
     <string name="monday">Понедельник</string>
     <string name="tuesday">Вторник</string>
