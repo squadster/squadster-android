@@ -107,18 +107,29 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickSquad {
             squadsPresenter.getSquads()
         }
 
+        val isUserAvailableInteractWithSquads =
+            squadsPresenter.draftUserInfo.currentUserInfo?.squadMember?.squad == null
+
+        if (!isUserAvailableInteractWithSquads) {
+            fl_create_squad.visibility = View.GONE
+        }
+
         fl_create_squad.setOnClickListener {
             val createSquadDialog = CreateSquadDialog(requireContext(), ::createSquad)
             createSquadDialog.show()
         }
 
-        squadsAdapter = SquadsAdapter(this, squadsPresenter.draftUserInfo.currentUserInfo?.id ?: "")
+        squadsAdapter = SquadsAdapter(
+            this,
+            squadsPresenter.draftUserInfo.currentUserInfo?.id ?: "",
+            isUserAvailableInteractWithSquads
+        )
         val llManager = LinearLayoutManager(context)
         rv_squads.layoutManager = llManager
         rv_squads.adapter = squadsAdapter
     }
 
-    private fun createSquad(squadNumber: String, classDay:Int){
+    private fun createSquad(squadNumber: String, classDay: Int) {
         squadsPresenter.createSquad(squadNumber, classDay)
     }
 }

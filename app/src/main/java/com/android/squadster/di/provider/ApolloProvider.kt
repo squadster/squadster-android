@@ -11,8 +11,8 @@ class ApolloProvider @Inject constructor(
     @ServerPath private val serverPath: String
 ) {
 
-    fun getClient(): ApolloClient {
-        return ApolloClient.builder()
+    val apolloClient: ApolloClient by lazy {
+        ApolloClient.builder()
             .serverUrl(serverPath)
             .okHttpClient(okHttpClient)
             .build()

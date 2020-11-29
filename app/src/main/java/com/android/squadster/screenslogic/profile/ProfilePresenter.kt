@@ -17,8 +17,6 @@ import javax.inject.Inject
 @InjectViewState
 class ProfilePresenter @Inject constructor(
     private val flowRouter: FlowRouter,
-    private val errorHandler: ErrorHandler,
-    private val resourceManager: ResourceManager,
     val draftUserInfo: DraftUserInfo
 ) : BasePresenter<ProfileView>() {
 

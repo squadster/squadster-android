@@ -22,8 +22,6 @@ import kotlinx.coroutines.launch
 @InjectViewState
 class SquadsPresenter @Inject constructor(
     private val flowRouter: FlowRouter,
-    private val errorHandler: ErrorHandler,
-    private val resourceManager: ResourceManager,
     val draftUserInfo: DraftUserInfo,
     private val queriesInteractor: QueriesInteractor
 ) : BasePresenter<SquadsView>() {
@@ -46,7 +44,7 @@ class SquadsPresenter @Inject constructor(
     }
 
     fun onBackPressed() {
-        flowRouter.finishFlow()
+        flowRouter.exit()
     }
 
     fun goToUserSquad() {

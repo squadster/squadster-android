@@ -58,10 +58,10 @@ class AuthPresenter @Inject constructor(
     }
 
     fun goToSquadsScreen() {
-        flowRouter.navigateTo(Screens.SquadsScreen)
+        flowRouter.replaceScreen(Screens.SquadsScreen)
     }
 
     fun goToUserSquadScreen() {
-        flowRouter.navigateTo(Screens.UserSquadScreen)
+        flowRouter.replaceScreen(Screens.UserSquadScreen)
     }
 }

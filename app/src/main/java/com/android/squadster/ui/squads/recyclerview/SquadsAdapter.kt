@@ -12,7 +12,8 @@ import com.squadster.server.GetSquadsQuery
 
 class SquadsAdapter(
     private val handler: OnClickSquad,
-    private val currentUserId: String
+    private val currentUserId: String,
+    private val isUserAvailableInteractWithSquads: Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var squads = ArrayList<Squad>()
@@ -21,11 +22,11 @@ class SquadsAdapter(
         val itemView: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_squad, parent, false)
 
-        return SquadViewHolder(itemView, handler, currentUserId)
+        return SquadViewHolder(itemView, handler, currentUserId, isUserAvailableInteractWithSquads)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as SquadViewHolder).bindItem(squads[position], position)
+        (holder as SquadViewHolder).bindItem(squads[position])
     }
 
     override fun getItemCount(): Int {

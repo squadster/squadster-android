@@ -4,7 +4,6 @@ import com.android.squadster.R
 import com.android.squadster.di.provider.ApolloProvider
 import com.android.squadster.extension.toUserInfo
 import com.android.squadster.extension.toUserSquad
-import com.android.squadster.model.data.server.model.DraftUserInfo
 import com.android.squadster.model.data.server.model.ResponseCallback
 import com.android.squadster.model.data.server.model.UserInfo
 import com.android.squadster.model.data.server.model.UserSquad
@@ -17,12 +16,11 @@ import javax.inject.Inject
 
 class QueriesInteractor @Inject constructor(
     private val apolloProvider: ApolloProvider,
-    private val draftUserInfo: DraftUserInfo,
     private val resourceManager: ResourceManager
 ) {
 
     fun getCurrentUserInfo(callback: ResponseCallback<UserInfo>) {
-        apolloProvider.getClient().query(GetCurrentUserQuery())
+        apolloProvider.apolloClient.query(GetCurrentUserQuery())
             ?.enqueue(object : ApolloCall.Callback<GetCurrentUserQuery.Data>() {
                 override fun onResponse(response: Response<GetCurrentUserQuery.Data>) {
                     response.data?.currentUser?.let {
@@ -41,7 +39,7 @@ class QueriesInteractor @Inject constructor(
     }
 
     fun getSquads(callback: ResponseCallback<GetSquadsQuery.Data>) {
-        apolloProvider.getClient().query(GetSquadsQuery())
+        apolloProvider.apolloClient.query(GetSquadsQuery())
             ?.enqueue(object : ApolloCall.Callback<GetSquadsQuery.Data>() {
                 override fun onResponse(response: Response<GetSquadsQuery.Data>) {
                     response.data?.let {
@@ -63,7 +61,7 @@ class QueriesInteractor @Inject constructor(
         id: String,
         callback: ResponseCallback<CreateSquadRequestMutation.Data>
     ) {
-        apolloProvider.getClient().mutate(CreateSquadRequestMutation(squadId = id))
+        apolloProvider.apolloClient.mutate(CreateSquadRequestMutation(squadId = id))
             ?.enqueue(object : ApolloCall.Callback<CreateSquadRequestMutation.Data>() {
                 override fun onResponse(response: Response<CreateSquadRequestMutation.Data>) {
                     response.data?.let {
@@ -85,7 +83,7 @@ class QueriesInteractor @Inject constructor(
         id: String,
         callback: ResponseCallback<DeleteSquadRequestMutation.Data>
     ) {
-        apolloProvider.getClient().mutate(DeleteSquadRequestMutation(id = id))
+        apolloProvider.apolloClient.mutate(DeleteSquadRequestMutation(id = id))
             ?.enqueue(object : ApolloCall.Callback<DeleteSquadRequestMutation.Data>() {
                 override fun onResponse(response: Response<DeleteSquadRequestMutation.Data>) {
                     response.data?.let {
@@ -107,7 +105,7 @@ class QueriesInteractor @Inject constructor(
         id: String,
         callback: ResponseCallback<DeleteSquadMemberMutation.Data>
     ) {
-        apolloProvider.getClient().mutate(DeleteSquadMemberMutation(id = id))
+        apolloProvider.apolloClient.mutate(DeleteSquadMemberMutation(id = id))
             ?.enqueue(object : ApolloCall.Callback<DeleteSquadMemberMutation.Data>() {
                 override fun onResponse(response: Response<DeleteSquadMemberMutation.Data>) {
                     response.data?.let {
@@ -131,7 +129,7 @@ class QueriesInteractor @Inject constructor(
         quequeNumber: Int,
         callback: ResponseCallback<UpdateSquadMemberMutation.Data>
     ) {
-        apolloProvider.getClient()
+        apolloProvider.apolloClient
             .mutate(UpdateSquadMemberMutation(id = id, role = role, quequeNumber = quequeNumber))
             ?.enqueue(object : ApolloCall.Callback<UpdateSquadMemberMutation.Data>() {
                 override fun onResponse(response: Response<UpdateSquadMemberMutation.Data>) {
@@ -155,7 +153,12 @@ class QueriesInteractor @Inject constructor(
         classDay: Int,
         callback: ResponseCallback<UserSquad>
     ) {
-        apolloProvider.getClient().mutate(CreateSquadMutation(squadNumber, classDay))
+        apolloProvider.apolloClient.mutate(
+            CreateSquadMutation(
+                squad_number = squadNumber,
+                class_day = classDay
+            )
+        )
             ?.enqueue(object : ApolloCall.Callback<CreateSquadMutation.Data>() {
                 override fun onResponse(response: Response<CreateSquadMutation.Data>) {
                     response.data?.createSquad?.let {
@@ -178,7 +181,7 @@ class QueriesInteractor @Inject constructor(
         number: String,
         callback: ResponseCallback<String>
     ) {
-        apolloProvider.getClient().mutate(UpdateSquadNumberMutation(id, number))
+        apolloProvider.apolloClient.mutate(UpdateSquadNumberMutation(id = id, number = number))
             ?.enqueue(object : ApolloCall.Callback<UpdateSquadNumberMutation.Data>() {
                 override fun onResponse(response: Response<UpdateSquadNumberMutation.Data>) {
                     response.data?.updateSquad?.squadNumber?.let {
@@ -201,7 +204,12 @@ class QueriesInteractor @Inject constructor(
         classDay: Int,
         callback: ResponseCallback<String>
     ) {
-        apolloProvider.getClient().mutate(UpdateSquadClassDayMutation(id, classDay))
+        apolloProvider.apolloClient.mutate(
+            UpdateSquadClassDayMutation(
+                id = id,
+                classDay = classDay
+            )
+        )
             ?.enqueue(object : ApolloCall.Callback<UpdateSquadClassDayMutation.Data>() {
                 override fun onResponse(response: Response<UpdateSquadClassDayMutation.Data>) {
                     response.data?.updateSquad?.classDay?.let {
@@ -224,7 +232,12 @@ class QueriesInteractor @Inject constructor(
         announcement: String,
         callback: ResponseCallback<String>
     ) {
-        apolloProvider.getClient().mutate(UpdateSquadAnnouncementMutation(id, announcement))
+        apolloProvider.apolloClient.mutate(
+            UpdateSquadAnnouncementMutation(
+                id = id,
+                advertisment = announcement
+            )
+        )
             ?.enqueue(object : ApolloCall.Callback<UpdateSquadAnnouncementMutation.Data>() {
                 override fun onResponse(response: Response<UpdateSquadAnnouncementMutation.Data>) {
                     response.data?.updateSquad?.advertisment?.let {
@@ -246,7 +259,7 @@ class QueriesInteractor @Inject constructor(
         id: String,
         callback: ResponseCallback<Boolean>
     ) {
-        apolloProvider.getClient().mutate(DeleteSquadMutation(id))
+        apolloProvider.apolloClient.mutate(DeleteSquadMutation(id = id))
             ?.enqueue(object : ApolloCall.Callback<DeleteSquadMutation.Data>() {
                 override fun onResponse(response: Response<DeleteSquadMutation.Data>) {
                     response.data?.deleteSquad?.id?.let {
@@ -269,7 +282,7 @@ class QueriesInteractor @Inject constructor(
         linkInvitationEnabled: Boolean,
         callback: ResponseCallback<Boolean>
     ) {
-        apolloProvider.getClient().mutate(UpdateSquadLinkOptionMutation(id, linkInvitationEnabled))
+        apolloProvider.apolloClient.mutate(UpdateSquadLinkOptionMutation(id = id, linkOption = linkInvitationEnabled))
             ?.enqueue(object : ApolloCall.Callback<UpdateSquadLinkOptionMutation.Data>() {
                 override fun onResponse(response: Response<UpdateSquadLinkOptionMutation.Data>) {
                     response.data?.updateSquad?.linkInvitationsEnabled?.let {
@@ -291,7 +304,7 @@ class QueriesInteractor @Inject constructor(
         id: String,
         callback: ResponseCallback<ApproveSquadRequestMutation.ApproveSquadRequest>
     ) {
-        apolloProvider.getClient().mutate(ApproveSquadRequestMutation(id))
+        apolloProvider.apolloClient.mutate(ApproveSquadRequestMutation(id = id))
             ?.enqueue(object : ApolloCall.Callback<ApproveSquadRequestMutation.Data>() {
                 override fun onResponse(response: Response<ApproveSquadRequestMutation.Data>) {
                     response.data?.approveSquadRequest?.let {

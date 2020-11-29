@@ -4,8 +4,6 @@ import android.content.Context
 import com.android.squadster.app.App
 import com.android.squadster.core.ErrorHandler
 import com.android.squadster.model.system.resource.ResourceManager
-import com.android.squadster.model.system.scheduler.AppSchedulers
-import com.android.squadster.model.system.scheduler.SchedulersProvider
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
@@ -18,8 +16,6 @@ class AppModule(
     init {
         bind(Context::class.java)
             .toInstance(app)
-        bind(SchedulersProvider::class.java)
-            .toInstance(AppSchedulers())
         bind(ResourceManager::class.java)
             .singleton()
         bind(ErrorHandler::class.java)

@@ -22,7 +22,6 @@ import javax.inject.Inject
 @InjectViewState
 class SquadSettingsPresenter @Inject constructor(
     private val flowRouter: FlowRouter,
-    private val errorHandler: ErrorHandler,
     private val resourceManager: ResourceManager,
     val draftUserInfo: DraftUserInfo,
     private val queriesInteractor: QueriesInteractor
