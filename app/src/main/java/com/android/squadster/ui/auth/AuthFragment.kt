@@ -85,7 +85,7 @@ class AuthFragment : BaseFragment(), AuthView {
             ) {
                 super.onReceivedError(view, request, error)
                 webview.visibility = View.GONE
-                //showErrorMessage()
+                showErrorMessage()
             }
         }
 
