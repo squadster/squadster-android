@@ -2,17 +2,12 @@ package com.android.squadster.screenslogic.squadsettings
 
 import com.android.squadster.R
 import com.android.squadster.core.BasePresenter
-import com.android.squadster.core.ErrorHandler
 import com.android.squadster.core.FlowRouter
 import com.android.squadster.core.Screens
-import com.android.squadster.extension.toMember
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
 import com.android.squadster.model.data.server.model.DraftUserInfo
-import com.android.squadster.model.data.server.model.ResponseCallback
 import com.android.squadster.model.data.server.model.ResultApiCall
 import com.android.squadster.model.system.resource.ResourceManager
-import com.squadster.server.ApproveSquadRequestMutation
-import com.squadster.server.DeleteSquadRequestMutation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

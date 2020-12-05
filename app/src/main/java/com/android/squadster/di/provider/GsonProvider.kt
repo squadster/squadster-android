@@ -1,4 +1,4 @@
-package com.maltamenu.pax.di.provider
+package com.android.squadster.di.provider
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

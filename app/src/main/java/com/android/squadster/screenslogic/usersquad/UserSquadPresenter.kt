@@ -7,7 +7,6 @@ import com.android.squadster.core.Screens
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
 import com.android.squadster.model.data.server.model.DraftUserInfo
 import com.android.squadster.model.data.server.model.Member
-import com.android.squadster.model.data.server.model.ResponseCallback
 import com.android.squadster.model.data.server.model.ResultApiCall
 import com.android.squadster.model.system.resource.ResourceManager
 import com.apollographql.apollo.api.toInput

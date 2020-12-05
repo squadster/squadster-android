@@ -19,8 +19,7 @@ class ProfileFragment : BaseFragment(), ProfileView {
 
     override val layoutRes = R.layout.fragment_profile
 
-    override fun installScopeModules(scope: Scope) {
-    }
+    override fun installScopeModules(scope: Scope) {}
 
     @InjectPresenter
     lateinit var profilePresenter: ProfilePresenter

@@ -21,7 +21,6 @@ class AppModule(
         bind(ErrorHandler::class.java)
             .singleton()
 
-        // Navigation
         val cicerone = Cicerone.create()
         bind(Router::class.java)
             .toInstance(cicerone.router)

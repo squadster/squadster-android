@@ -7,7 +7,7 @@ import com.android.squadster.di.provider.OkHttpClientProvider
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
 import com.android.squadster.model.data.server.interceptor.AuthInterceptor
 import com.google.gson.Gson
-import com.maltamenu.pax.di.provider.GsonProvider
+import com.android.squadster.di.provider.GsonProvider
 import okhttp3.OkHttpClient
 import toothpick.config.Module
 
