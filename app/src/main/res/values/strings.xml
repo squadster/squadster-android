@@ -19,6 +19,8 @@
     <string name="squads">Взводы</string>
     <string name="user_squad">Взвод №%s</string>
     <string name="announcement">Объявление:\n%s</string>
+    <string name="name_and_lastname">%1$s %2$s</string>
+    <string name="command_stuff">Командный состав</string>
     <string name="composition">Состав</string>
     <string name="unknown_squad_number">####</string>
     <string name="unknown_class_day">Не известно</string>
@@ -31,6 +33,8 @@
     <string name="no">Нет</string>
     <string name="requests">Запросы на вступление</string>
     <string name="requests_empty">Запросов нет</string>
+    <string name="commanders_empty">Коммандиров нет</string>
+    <string name="students_empty">Студентов нет</string>
     <string name="choose_role">Выберите новую должность для члена взвода</string>
     <string name="delete_squad_message">Вы уверены что хотите удалить взвод? Все студенты автоматически покинут его. Вы можете передать командование другому студенту и покинуть взвод</string>
     <string name="delete_squad_user_message">Вы уверены, что хотите покинуть взвод?</string>

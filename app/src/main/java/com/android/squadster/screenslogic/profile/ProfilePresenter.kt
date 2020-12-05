@@ -4,11 +4,10 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.widget.ImageView
+import com.android.squadster.R
 import com.android.squadster.core.BasePresenter
-import com.android.squadster.core.ErrorHandler
 import com.android.squadster.core.FlowRouter
 import com.android.squadster.model.data.server.model.DraftUserInfo
-import com.android.squadster.model.system.resource.ResourceManager
 import com.bumptech.glide.Glide
 import moxy.InjectViewState
 import javax.inject.Inject
@@ -34,6 +33,7 @@ class ProfilePresenter @Inject constructor(
         if (context != null) {
             Glide.with(context)
                 .load(imageUrl)
+                .error(R.drawable.ic_soldier)
                 .circleCrop()
                 .into(view)
         }

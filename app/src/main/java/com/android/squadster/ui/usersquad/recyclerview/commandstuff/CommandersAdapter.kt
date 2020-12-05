@@ -1,4 +1,4 @@
-package com.android.squadster.ui.usersquad.recyclerview
+package com.android.squadster.ui.usersquad.recyclerview.commandstuff
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.squadster.R
 import com.android.squadster.model.data.server.model.Member
+import com.android.squadster.ui.usersquad.recyclerview.OnClickSquadMember
 
-class MembersAdapter(
+class CommandersAdapter(
     private val handler: OnClickSquadMember,
     private val currentUserId: String,
     private val isCurrentUserCommander: Boolean
@@ -19,11 +20,11 @@ class MembersAdapter(
         val itemView: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_soldier, parent, false)
 
-        return MemberViewHolder(itemView, handler, currentUserId, isCurrentUserCommander)
+        return CommanderViewHolder(itemView, handler, currentUserId, isCurrentUserCommander)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as MemberViewHolder).bindItem(members[position])
+        (holder as CommanderViewHolder).bindItem(members[position])
     }
 
     override fun getItemCount(): Int {
@@ -59,4 +60,17 @@ class MembersAdapter(
             notifyItemRemoved(index)
         }
     }
+
+    fun addMember(member: Member) {
+        members.add(member)
+        notifyItemInserted(members.lastIndex)
+    }
+
+    fun findMember(id: String): Member? {
+        return members.find {
+            it.id == id
+        }
+    }
+
+    fun isListOfMembersIsEmpty(): Boolean = members.isEmpty()
 }

@@ -2,20 +2,23 @@ package com.android.squadster.screenslogic.usersquad
 
 import com.android.squadster.R
 import com.android.squadster.core.BasePresenter
-import com.android.squadster.core.ErrorHandler
 import com.android.squadster.core.FlowRouter
 import com.android.squadster.core.Screens
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
 import com.android.squadster.model.data.server.model.DraftUserInfo
+import com.android.squadster.model.data.server.model.Member
 import com.android.squadster.model.data.server.model.ResponseCallback
 import com.android.squadster.model.system.resource.ResourceManager
+import com.apollographql.apollo.api.toInput
 import com.squadster.server.*
+import com.squadster.server.type.SquadMembersBatch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @InjectViewState
 class UserSquadPresenter @Inject constructor(
@@ -29,7 +32,7 @@ class UserSquadPresenter @Inject constructor(
         var isCurrentUserCommander = false
 
         draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.forEach { member ->
-            if (member.id == draftUserInfo.currentUserInfo?.id) {
+            if (member.user?.id == draftUserInfo.currentUserInfo?.id) {
                 isCurrentUserCommander = true
                 return@forEach
             }
@@ -52,6 +55,24 @@ class UserSquadPresenter @Inject constructor(
         }
     }
 
+    fun getCommandStuff(): ArrayList<Member> {
+        val listOfMembers = draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.filter { member ->
+            member.role != STUDENT
+        }
+
+        return ArrayList(listOfMembers ?: ArrayList<Member>())
+    }
+
+    fun getStudentStuff(): ArrayList<Member> {
+        val listOfMembers = draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.filter { member ->
+            member.role == STUDENT
+        }?.sortedBy {
+            it.queueNumber
+        }
+
+        return ArrayList(listOfMembers ?: ArrayList<Member>())
+    }
+
     fun onBackPressed() {
         flowRouter.finishFlow()
     }
@@ -72,7 +93,7 @@ class UserSquadPresenter @Inject constructor(
         flowRouter.replaceScreen(Screens.SquadsScreen)
     }
 
-    fun deleteMember(id: String) {
+    fun deleteMember(id: String, role: String) {
         GlobalScope.launch(Dispatchers.IO) {
             queriesInteractor.deleteMember(
                 id,
@@ -85,7 +106,7 @@ class UserSquadPresenter @Inject constructor(
                             }
                             if (member != null) {
                                 draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.remove(member)
-                                viewState.deleteSquadMember(data.deleteSquadMember.id)
+                                viewState.deleteSquadMember(data.deleteSquadMember.id, role)
                             }
                         }
                     }
@@ -97,11 +118,11 @@ class UserSquadPresenter @Inject constructor(
         }
     }
 
-    fun updateMemberRole(id: String, role: String, quequeNumber: Int) {
+    fun updateMemberRole(id: String, oldRole: String, newRole: String, quequeNumber: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             queriesInteractor.updateMemberRole(
                 id,
-                role,
+                newRole,
                 quequeNumber,
                 object : ResponseCallback<UpdateSquadMemberMutation.Data> {
 
@@ -118,6 +139,7 @@ class UserSquadPresenter @Inject constructor(
                                     draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.set(index, member)
                                     viewState.updateSquadMemberRole(
                                         data.updateSquadMember.id,
+                                        oldRole,
                                         data.updateSquadMember.role.toString(),
                                         data.updateSquadMember.queueNumber ?: 0
                                     )
@@ -148,5 +170,36 @@ class UserSquadPresenter @Inject constructor(
                 }
             })
         }
+    }
+
+    fun updateSquadQueue(students: ArrayList<Member>) {
+        val batches = ArrayList<SquadMembersBatch>()
+        students.forEachIndexed { index, member ->
+            val batch = SquadMembersBatch(member.id, (index + 1).toInput())
+            batches.add(batch)
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            queriesInteractor.updateSquadQueue(batches, object : ResponseCallback<Boolean> {
+
+                override fun success(data: Boolean) {
+                    students.forEachIndexed { index, member ->
+                        draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.find {
+                            it.id == member.id
+                        }?.queueNumber = index + 1
+                    }
+                }
+
+                override fun error(error: String) {
+                    viewState.showErrorMessage(error)
+                }
+            })
+        }
+    }
+
+    companion object {
+        const val COMMANDER = "commander"
+        const val DEPUTY_COMMANDER = "deputy_commander"
+        const val JOURNALIST = "journalist"
+        const val STUDENT = "student"
     }
 }

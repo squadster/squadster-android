@@ -12,12 +12,32 @@ import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.squadster.server.*
+import com.squadster.server.type.SquadMembersBatch
 import javax.inject.Inject
 
 class QueriesInteractor @Inject constructor(
     private val apolloProvider: ApolloProvider,
     private val resourceManager: ResourceManager
 ) {
+
+    /*suspend fun getCurrentUserInfoNew(): Flow<UserInfo> {
+        return flow {
+            apolloProvider.apolloClient.query(GetCurrentUserQuery())
+                ?.enqueue(object : ApolloCall.Callback<GetCurrentUserQuery.Data>() {
+                    override fun onResponse(response: Response<GetCurrentUserQuery.Data>) {
+                        response.data?.currentUser?.let {
+                            GlobalScope.launch(Dispatchers.Main) {
+                                emit(it.toUserInfo())
+                            }
+                        }
+                    }
+
+                    override fun onFailure(e: ApolloException) {
+
+                    }
+                })
+        }
+    }*/
 
     fun getCurrentUserInfo(callback: ResponseCallback<UserInfo>) {
         apolloProvider.apolloClient.query(GetCurrentUserQuery())
@@ -282,7 +302,12 @@ class QueriesInteractor @Inject constructor(
         linkInvitationEnabled: Boolean,
         callback: ResponseCallback<Boolean>
     ) {
-        apolloProvider.apolloClient.mutate(UpdateSquadLinkOptionMutation(id = id, linkOption = linkInvitationEnabled))
+        apolloProvider.apolloClient.mutate(
+            UpdateSquadLinkOptionMutation(
+                id = id,
+                linkOption = linkInvitationEnabled
+            )
+        )
             ?.enqueue(object : ApolloCall.Callback<UpdateSquadLinkOptionMutation.Data>() {
                 override fun onResponse(response: Response<UpdateSquadLinkOptionMutation.Data>) {
                     response.data?.updateSquad?.linkInvitationsEnabled?.let {
@@ -309,6 +334,28 @@ class QueriesInteractor @Inject constructor(
                 override fun onResponse(response: Response<ApproveSquadRequestMutation.Data>) {
                     response.data?.approveSquadRequest?.let {
                         callback.success(it)
+                    } ?: run {
+                        callback.error(resourceManager.getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailure(e: ApolloException) {
+                    callback.error(
+                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
+                    )
+                }
+            })
+    }
+
+    fun updateSquadQueue(
+        list: List<SquadMembersBatch>,
+        callback: ResponseCallback<Boolean>
+    ) {
+        apolloProvider.apolloClient.mutate(UpdateSquadMembersMutation(members = list))
+            ?.enqueue(object : ApolloCall.Callback<UpdateSquadMembersMutation.Data>() {
+                override fun onResponse(response: Response<UpdateSquadMembersMutation.Data>) {
+                    response.data?.let {
+                        callback.success(true)
                     } ?: run {
                         callback.error(resourceManager.getString(R.string.something_went_wrong))
                     }

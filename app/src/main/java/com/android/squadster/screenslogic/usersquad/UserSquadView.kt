@@ -10,10 +10,10 @@ interface UserSquadView : MvpView {
     fun showErrorMessage(message: String)
 
     @AddToEnd
-    fun deleteSquadMember(id: String)
+    fun deleteSquadMember(id: String, role: String)
 
     @AddToEnd
-    fun updateSquadMemberRole(id: String, role: String, quequeNumber: Int)
+    fun updateSquadMemberRole(id: String, oldRole: String, newRole: String, quequeNumber: Int)
 
     @AddToEnd
     fun deleteSquad()

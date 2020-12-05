@@ -3,7 +3,7 @@ package com.android.squadster.ui.squads.recyclerview
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.android.squadster.model.data.server.model.Squad
-import com.android.squadster.ui.usersquad.recyclerview.MemberViewHolder
+import com.android.squadster.screenslogic.usersquad.UserSquadPresenter.Companion.COMMANDER
 import kotlinx.android.synthetic.main.item_squad.view.*
 
 class SquadViewHolder(
@@ -25,7 +25,7 @@ class SquadViewHolder(
     private fun setupViews() {
         itemView.tv_squad_number.text = squad.squadNumber
         val commander = squad.members.find { member ->
-            member.role == MemberViewHolder.COMMANDER
+            member.role == COMMANDER
         }?.user
         val name = commander?.let { user ->
             "${user.firstName} ${user.lastName}"
