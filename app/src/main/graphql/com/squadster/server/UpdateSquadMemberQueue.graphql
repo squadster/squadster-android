@@ -1,0 +1,7 @@
+mutation updateSquadMembers($members: [SquadMembersBatch]!) {
+    updateSquadMembers(
+        batch: $members
+    ) {
+        id
+    }
+}

@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Squadster</string>
+    <string name="profile">Профиль</string>
+    <string name="log_out">Выйти</string>
+    <string name="about_us">О нас</string>
+    <string name="squad_profile">Профиль взвода</string>
+
+    <string name="network_error">Network error</string>
+    <string name="timeout_error">Timeout error</string>
+    <string name="unknown_error">Unknown error</string>
+
+    <string name="something_went_wrong">Что-то пошло не так. Перезагрузите приложение</string>
+    <string name="squad_number">Номер</string>
+    <string name="no_squads">Список взводов пуст</string>
+    <string name="create_squad">Создать взвод</string>
+    <string name="number">Номер взвода</string>
+    <string name="class_day">День занятий:\n%s</string>
+    <string name="class_day_settings">День занятий: %s</string>
+    <string name="squads">Взводы</string>
+    <string name="user_squad">Взвод №%s</string>
+    <string name="announcement">Объявление:\n%s</string>
+    <string name="name_and_lastname">%1$s %2$s</string>
+    <string name="command_stuff">Командный состав</string>
+    <string name="composition">Состав</string>
+    <string name="unknown_squad_number">####</string>
+    <string name="unknown_class_day">Не известно</string>
+    <string name="none_announcement">Здесь пока ничего нет</string>
+    <string name="delete_squad">Расформировать взвод</string>
+    <string name="turn_on_link_invitation">Включить доступ по ссылке</string>
+    <string name="turn_off_link_invitation">Выключить доступ по ссылке</string>
+    <string name="need_confirmation">Нужно подтверждение!</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="requests">Запросы на вступление</string>
+    <string name="requests_empty">Запросов нет</string>
+    <string name="commanders_empty">Коммандиров нет</string>
+    <string name="students_empty">Студентов нет</string>
+    <string name="choose_role">Выберите новую должность для члена взвода</string>
+    <string name="delete_squad_message">Вы уверены что хотите удалить взвод? Все студенты автоматически покинут его. Вы можете передать командование другому студенту и покинуть взвод</string>
+    <string name="delete_squad_user_message">Вы уверены, что хотите покинуть взвод?</string>
+
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
+
+    <string name="commander">Командир</string>
+    <string name="deputy_commander">Зам.командира</string>
+    <string name="journalist">Журналист</string>
+    <string name="student">Студент</string>
+
+    <string-array name="days">
+        <item>Понедельник</item>
+        <item>Вторник</item>
+        <item>Среда</item>
+        <item>Четверг</item>
+        <item>Пятница</item>
+        <item>Суббота</item>
+        <item>Воскресенье</item>
+    </string-array>
+</resources>

@@ -1,0 +1,56 @@
+ext {
+    buildTools = '30.0.2'
+    minSdk = 21
+    targetSdk = 30
+    compileSdk = 30
+
+    appСompat = '1.2.0-alpha01'
+    core = '1.3.1'
+    constraintLayout = '2.0.0'
+    fragment = '1.2.5'
+    glide = '4.11.0'
+
+    moxycommunity = '2.2.0'
+    toothpick = '3.1.0'
+    cicerone = '5.1.1'
+    rxJava = '2.2.19'
+    rxAndroid = '2.1.1'
+    retrofit = '2.7.1'
+    loggingInterceptor = '4.3.0'
+    materialComponents = '1.2.1'
+
+    kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    kapt = [
+            moxy     : "com.github.moxy-community:moxy-compiler:$moxycommunity",
+            toothpick: "com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpick",
+            glide    : "com.github.bumptech.glide:compiler:$glide"
+    ]
+    androidX = [
+            appCompat       : "androidx.appcompat:appcompat:$appСompat",
+            coreKtx         : "androidx.core:core-ktx:$core",
+            constraintLayout: "androidx.constraintlayout:constraintlayout:$constraintLayout",
+            fragment        : "androidx.fragment:fragment:$fragment"
+    ]
+    moxycommunity = [
+            android: "com.github.moxy-community:moxy-androidx:$moxycommunity",
+            core   : "com.github.moxy-community:moxy:$moxycommunity"
+    ]
+    toothpick = [
+            runtime: "com.github.stephanenicolas.toothpick:toothpick-runtime:$toothpick",
+            android: "com.github.stephanenicolas.toothpick:smoothie-androidx:$toothpick"
+    ]
+    cicerone = "ru.terrakok.cicerone:cicerone:$cicerone"
+    rx = [
+            java   : "io.reactivex.rxjava2:rxjava:$rxJava",
+            android: "io.reactivex.rxjava2:rxandroid:$rxAndroid"
+    ]
+    retrofit = [
+            core              : "com.squareup.retrofit2:retrofit:$retrofit",
+            converterGson     : "com.squareup.retrofit2:converter-gson:$retrofit",
+            rxAdapter         : "com.squareup.retrofit2:adapter-rxjava2:$retrofit",
+            loggingInterceptor: "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
+    ]
+
+    materialComponents = "com.google.android.material:material:$materialComponents"
+    glide = "com.github.bumptech.glide:glide:$glide"
+}

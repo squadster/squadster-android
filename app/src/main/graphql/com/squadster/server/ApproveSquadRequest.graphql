@@ -1,0 +1,21 @@
+mutation approveSquadRequest($id: ID!) {
+    approveSquadRequest(
+        id: $id
+    ) {
+        id
+        role
+        queueNumber
+        user {
+            id
+            firstName
+            lastName
+            mobilePhone
+            faculty
+            university
+            imageUrl
+            smallImageUrl
+            vkUrl
+            birthDate
+        }
+    }
+}

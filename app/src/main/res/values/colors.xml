@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/dark_blue</color>
+    <color name="colorPrimaryDark">@color/dark_blue</color>
+    <color name="colorAccent">@color/blazing_orange</color>
+
+    <color name="blazing_orange">#3f51b5</color>
+    <color name="dark_blue">#3f51b5</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="black_1">#80000000</color>
+    <color name="gray">#828282</color>
+    <color name="red">#FF0000</color>
+    <color name="transparent">#00000000</color>
+    <color name="clearest_blue">#20bfff</color>
+</resources>

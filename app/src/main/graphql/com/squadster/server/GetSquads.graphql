@@ -1,0 +1,21 @@
+query getSquads {
+    squads {
+        id
+        squadNumber
+        linkInvitationsEnabled
+        members {
+            role
+            user {
+                id
+                lastName
+                firstName
+            }
+        }
+        requests {
+            id
+            user {
+                id
+            }
+        }
+    }
+}
