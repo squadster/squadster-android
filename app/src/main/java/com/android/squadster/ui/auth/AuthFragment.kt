@@ -41,22 +41,8 @@ class AuthFragment : BaseFragment(), AuthView {
     }
 
     override fun showErrorMessage(message: String) {
-        activity?.runOnUiThread {
-            txt_error.text = message
-            txt_error.visibility = View.VISIBLE
-        }
-    }
-
-    override fun goToSquadsScreen() {
-        activity?.runOnUiThread {
-            authPresenter.goToSquadsScreen()
-        }
-    }
-
-    override fun goToUserSquadScreen() {
-        activity?.runOnUiThread {
-            authPresenter.goToUserSquadScreen()
-        }
+        txt_error.text = message
+        txt_error.visibility = View.VISIBLE
     }
 
     private fun showErrorMessage() {

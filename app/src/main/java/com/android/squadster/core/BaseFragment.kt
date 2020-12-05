@@ -68,7 +68,6 @@ abstract class BaseFragment : MvpAppCompatFragment() {
 
     private fun simpleFragmentScopeName() = "${javaClass.simpleName}_${hashCode()}"
 
-    // Taken from Moxy MvpAppCompatFragment to close Toothpick scope.
     private fun shouldCloseScope() =
         when {
             activity?.isFinishing == true -> true

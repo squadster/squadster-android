@@ -9,12 +9,14 @@ import com.android.squadster.extension.toMember
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
 import com.android.squadster.model.data.server.model.DraftUserInfo
 import com.android.squadster.model.data.server.model.ResponseCallback
+import com.android.squadster.model.data.server.model.ResultApiCall
 import com.android.squadster.model.system.resource.ResourceManager
 import com.squadster.server.ApproveSquadRequestMutation
 import com.squadster.server.DeleteSquadRequestMutation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import moxy.InjectViewState
 import java.util.*
 import javax.inject.Inject
@@ -29,10 +31,6 @@ class SquadSettingsPresenter @Inject constructor(
 
     fun onBackPressed() {
         flowRouter.exit()
-    }
-
-    fun goToSquads() {
-        flowRouter.replaceScreen(Screens.SquadsScreen)
     }
 
     fun getClassDay(): Pair<String, Int> {
@@ -52,233 +50,144 @@ class SquadSettingsPresenter @Inject constructor(
     fun updateSquadNumber(number: String) {
         GlobalScope.launch(Dispatchers.IO) {
             val id = draftUserInfo.currentUserInfo?.squadMember?.squad?.id ?: ""
-            queriesInteractor.updateSquadNumber(id, number, object : ResponseCallback<String> {
+            val result = queriesInteractor.updateSquadNumber(id, number)
 
-                override fun success(data: String) {
-                    draftUserInfo.currentUserInfo?.squadMember?.squad?.squadNumber = data
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is ResultApiCall.Success -> {
+                        draftUserInfo.currentUserInfo?.squadMember?.squad?.squadNumber = result.data
+                    }
+                    is ResultApiCall.Error -> {
+                        viewState.showErrorMessage(result.message)
+                    }
                 }
-
-                override fun error(error: String) {
-                    viewState.showErrorMessage(error)
-                }
-            })
+            }
         }
     }
 
     fun updateSquadClassDay(classDay: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             val id = draftUserInfo.currentUserInfo?.squadMember?.squad?.id ?: ""
-            queriesInteractor.updateSquadClassDay(id, classDay, object : ResponseCallback<String> {
+            val result = queriesInteractor.updateSquadClassDay(id, classDay)
 
-                override fun success(data: String) {
-                    draftUserInfo.currentUserInfo?.squadMember?.squad?.classDay = data
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is ResultApiCall.Success -> {
+                        draftUserInfo.currentUserInfo?.squadMember?.squad?.classDay = result.data
+                    }
+                    is ResultApiCall.Error -> {
+                        viewState.showErrorMessage(result.message)
+                    }
                 }
-
-                override fun error(error: String) {
-                    viewState.showErrorMessage(error)
-                }
-            })
+            }
         }
     }
 
     fun updateSquadAnnouncement(announcement: String) {
         GlobalScope.launch(Dispatchers.IO) {
             val id = draftUserInfo.currentUserInfo?.squadMember?.squad?.id ?: ""
-            queriesInteractor.updateSquadAnnouncement(id, announcement, object : ResponseCallback<String> {
+            val result = queriesInteractor.updateSquadAnnouncement(id, announcement)
 
-                override fun success(data: String) {
-                    draftUserInfo.currentUserInfo?.squadMember?.squad?.advertisment = data
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is ResultApiCall.Success -> {
+                        draftUserInfo.currentUserInfo?.squadMember?.squad?.advertisment = result.data
+                    }
+                    is ResultApiCall.Error -> {
+                        viewState.showErrorMessage(result.message)
+                    }
                 }
-
-                override fun error(error: String) {
-                    viewState.showErrorMessage(error)
-                }
-            })
+            }
         }
     }
 
     fun deleteSquad() {
         GlobalScope.launch(Dispatchers.IO) {
             val id = draftUserInfo.currentUserInfo?.squadMember?.squad?.id ?: ""
-            queriesInteractor.deleteSquad(id, object : ResponseCallback<Boolean> {
+            val result = queriesInteractor.deleteSquad(id)
 
-                override fun success(data: Boolean) {
-                    draftUserInfo.currentUserInfo?.squadMember?.squad = null
-                    viewState.deleteSquad()
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is ResultApiCall.Success -> {
+                        draftUserInfo.currentUserInfo?.squadMember?.squad = null
+                        goToSquads()
+                    }
+                    is ResultApiCall.Error -> {
+                        viewState.showErrorMessage(result.message)
+                    }
                 }
-
-                override fun error(error: String) {
-                    viewState.showErrorMessage(error)
-                }
-            })
+            }
         }
     }
 
     fun updateLinkInvitation(linkInvitation: Boolean) {
         GlobalScope.launch(Dispatchers.IO) {
             val id = draftUserInfo.currentUserInfo?.squadMember?.squad?.id ?: ""
-            queriesInteractor.updateLinkInvitation(id, linkInvitation, object : ResponseCallback<Boolean> {
+            val result = queriesInteractor.updateLinkInvitation(id, linkInvitation)
 
-                override fun success(data: Boolean) {
-                    draftUserInfo.currentUserInfo?.squadMember?.squad?.linkInvitationsEnabled = data
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is ResultApiCall.Success -> {
+                        draftUserInfo.currentUserInfo?.squadMember?.squad?.linkInvitationsEnabled = result.data
+                    }
+                    is ResultApiCall.Error -> {
+                        viewState.showErrorMessage(result.message)
+                    }
                 }
-
-                override fun error(error: String) {
-                    viewState.showErrorMessage(error)
-                }
-            })
+            }
         }
     }
 
     fun acceptRequest(id: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            queriesInteractor.acceptRequest(id, object : ResponseCallback<ApproveSquadRequestMutation.ApproveSquadRequest> {
+            val result = queriesInteractor.acceptRequest(id)
 
-                override fun success(data: ApproveSquadRequestMutation.ApproveSquadRequest) {
-                    val member = data.toMember()
-                    draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.add(member)
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is ResultApiCall.Success -> {
+                        draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.add(result.data)
 
-                    val request = draftUserInfo.currentUserInfo?.squadMember?.squad?.requests?.find {
-                        id == it.id
+                        val request = draftUserInfo.currentUserInfo?.squadMember?.squad?.requests?.find {
+                            id == it.id
+                        }
+                        if (request != null) {
+                            draftUserInfo.currentUserInfo?.squadMember?.squad?.requests?.remove(request)
+                        }
+                        viewState.updateRequest(id)
                     }
-                    if (request != null) {
-                        draftUserInfo.currentUserInfo?.squadMember?.squad?.requests?.remove(request)
+                    is ResultApiCall.Error -> {
+                        viewState.showErrorMessage(result.message)
                     }
-                    viewState.updateRequest(id)
                 }
-
-                override fun error(error: String) {
-                    viewState.showErrorMessage(error)
-                }
-            })
+            }
         }
     }
 
     fun rejectRequest(id: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            queriesInteractor.deleteSquadRequest(id, object : ResponseCallback<DeleteSquadRequestMutation.Data> {
+            val result = queriesInteractor.deleteSquadRequest(id)
 
-                override fun success(data: DeleteSquadRequestMutation.Data) {
-                    val requestId = data.deleteSquadRequest?.id
-                    val request = draftUserInfo.currentUserInfo?.squadMember?.squad?.requests?.find {
-                        requestId == it.id
-                    }
-                    if (request != null) {
-                        draftUserInfo.currentUserInfo?.squadMember?.squad?.requests?.remove(request)
-                    }
-                    viewState.updateRequest(requestId ?: "")
-                }
-
-                override fun error(error: String) {
-                    viewState.showErrorMessage(error)
-                }
-            })
-        }
-    }
-
-    /*fun loadUserAvatar(context: Context?, view: ImageView) {
-        if (context != null) {
-            Glide.with(context)
-                .load(draftUserInfo.userInfo?.imageUrl)
-                .circleCrop()
-                .into(view)
-        }
-    }
-
-    fun goToProfile() {
-        flowRouter.navigateTo(Screens.ProfileScreen)
-    }
-
-    fun onBackPressed() {
-        flowRouter.finishFlow()
-    }
-
-    fun getCurrentUserId(): String {
-        return draftUserInfo.userInfo?.id ?: ""
-    }
-
-    fun getSquads() {
-        GlobalScope.launch(Dispatchers.IO) {
-            queriesInteractor.getSquads(object : ResponseCallback<GetSquadsQuery.Data> {
-
-                override fun success(data: GetSquadsQuery.Data) {
-                    if (data.squads != null && data.squads.isNotEmpty()) {
-                        viewState.setSquads(data.squads.filterNotNull())
-                    } else {
-                        viewState.showEmptyListOfSquads()
-                    }
-                }
-
-                override fun error(error: String) {
-                    viewState.showErrorMessage(error)
-                }
-            })
-        }
-    }
-
-    fun sendRequest(squadId: String) {
-        GlobalScope.launch(Dispatchers.IO) {
-            queriesInteractor.createSquadRequest(
-                squadId,
-                object : ResponseCallback<CreateSquadRequestMutation.Data> {
-
-                    override fun success(data: CreateSquadRequestMutation.Data) {
-                        if (data.createSquadRequest?.squad?.id != null) {
-                            viewState.updateSquadInvitation(
-                                data.createSquadRequest.squad.id,
-                                data.createSquadRequest.id,
-                                RequestStatus.SEND
-                            )
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is ResultApiCall.Success -> {
+                        val requestId = result.data.deleteSquadRequest?.id
+                        val request = draftUserInfo.currentUserInfo?.squadMember?.squad?.requests?.find {
+                            requestId == it.id
                         }
-                    }
-
-                    override fun error(error: String) {
-                        viewState.showErrorMessage(error)
-                    }
-                })
-        }
-    }
-
-    fun cancelRequest(requestId: String?) {
-        requestId?.let {
-            GlobalScope.launch(Dispatchers.IO) {
-                queriesInteractor.deleteSquadRequest(
-                    requestId,
-                    object : ResponseCallback<DeleteSquadRequestMutation.Data> {
-
-                        override fun success(data: DeleteSquadRequestMutation.Data) {
-                            if (data.deleteSquadRequest?.id != null) {
-                                viewState.updateSquadInvitation(
-                                    data.deleteSquadRequest.squad?.id ?: "",
-                                    data.deleteSquadRequest.id,
-                                    RequestStatus.CANCEL
-                                )
-                            }
+                        if (request != null) {
+                            draftUserInfo.currentUserInfo?.squadMember?.squad?.requests?.remove(request)
                         }
-
-                        override fun error(error: String) {
-                            viewState.showErrorMessage(error)
-                        }
-                    })
+                        viewState.updateRequest(requestId ?: "")
+                    }
+                    is ResultApiCall.Error -> {
+                        viewState.showErrorMessage(result.message)
+                    }
+                }
             }
         }
     }
 
-    fun createSquad(squadNumber: String, classDay: Int) {
-        GlobalScope.launch(Dispatchers.IO) {
-            queriesInteractor.createSquad(
-                squadNumber,
-                classDay,
-                object : ResponseCallback<UserSquad> {
-
-                    override fun success(data: UserSquad) {
-
-                    }
-
-                    override fun error(error: String) {
-                        viewState.showErrorMessage(error)
-                    }
-                })
-        }
-    }*/
+    private fun goToSquads() {
+        flowRouter.replaceScreen(Screens.SquadsScreen)
+    }
 }

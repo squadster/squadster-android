@@ -8,10 +8,4 @@ interface AuthView : MvpView {
 
     @OneExecution
     fun showErrorMessage(message: String)
-
-    @AddToEnd
-    fun goToSquadsScreen()
-
-    @AddToEnd
-    fun goToUserSquadScreen()
 }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.squadster.R
 import com.android.squadster.core.BaseFragment
 import com.android.squadster.model.data.server.model.RequestStatus
+import com.android.squadster.model.data.server.model.Squad
 import com.android.squadster.screenslogic.squads.SquadsPresenter
 import com.android.squadster.screenslogic.squads.SquadsView
 import com.android.squadster.ui.squads.dialog.CreateSquadDialog
@@ -44,16 +45,14 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickSquad {
         setupViews()
     }
 
-    override fun setSquads(squads: List<GetSquadsQuery.Squad>) {
+    override fun setSquads(squads: List<Squad>) {
         srl_update_squads_list.isRefreshing = false
-        activity?.runOnUiThread {
-            if (squads.isEmpty()) {
-                showEmptyListOfSquads()
-            } else {
-                cl_addition_info.visibility = View.VISIBLE
-                rv_squads.visibility = View.VISIBLE
-                squadsAdapter.setData(ArrayList(squads))
-            }
+        if (squads.isEmpty()) {
+            showEmptyListOfSquads()
+        } else {
+            cl_addition_info.visibility = View.VISIBLE
+            rv_squads.visibility = View.VISIBLE
+            squadsAdapter.setData(ArrayList(squads))
         }
     }
 
@@ -62,30 +61,12 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickSquad {
         requestId: String,
         requestStatus: RequestStatus
     ) {
-        activity?.runOnUiThread {
-            squadsAdapter.updateSquad(squadId, requestId, requestStatus)
-        }
-    }
-
-    override fun goToUserSquad() {
-        activity?.runOnUiThread {
-            squadsPresenter.goToUserSquad()
-        }
+        squadsAdapter.updateSquad(squadId, requestId, requestStatus)
     }
 
     override fun showErrorMessage(message: String) {
         srl_update_squads_list.isRefreshing = false
-        activity?.runOnUiThread {
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    override fun showEmptyListOfSquads() {
-        activity?.runOnUiThread {
-            cl_addition_info.visibility = View.GONE
-            rv_squads.visibility = View.GONE
-            tv_no_squads_message.visibility = View.VISIBLE
-        }
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
     override fun sendRequest(squadId: String) {
@@ -94,6 +75,12 @@ class SquadsFragment : BaseFragment(), SquadsView, OnClickSquad {
 
     override fun cancelRequest(requestId: String?) {
         squadsPresenter.cancelRequest(requestId)
+    }
+
+    private fun showEmptyListOfSquads() {
+        cl_addition_info.visibility = View.GONE
+        rv_squads.visibility = View.GONE
+        tv_no_squads_message.visibility = View.VISIBLE
     }
 
     private fun setupViews() {

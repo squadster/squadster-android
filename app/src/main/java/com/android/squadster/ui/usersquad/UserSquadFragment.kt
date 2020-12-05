@@ -60,12 +60,6 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
         userSquadPresenter.deleteMember(id, role)
     }
 
-    override fun deleteSquad() {
-        activity?.runOnUiThread {
-            userSquadPresenter.goToSquadsWithoutExit()
-        }
-    }
-
     override fun updateMemberRole(id: String, oldRole: String, quequeNumber: Int?) {
         val updateMemberRoleDialog = UpdateMemberRoleDialog(
             requireContext(),
@@ -87,27 +81,23 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
     }
 
     override fun showErrorMessage(message: String) {
-        activity?.runOnUiThread {
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        }
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
     override fun deleteSquadMember(id: String, role: String) {
-        activity?.runOnUiThread {
-            when (role) {
-                UserSquadPresenter.STUDENT -> {
-                    studentsAdapter.deleteMember(id)
-                    if (studentsAdapter.isListOfMembersIsEmpty()) {
-                        rv_soldiers.visibility = View.INVISIBLE
-                        tv_empty_students_message.visibility = View.VISIBLE
-                    }
+        when (role) {
+            UserSquadPresenter.STUDENT -> {
+                studentsAdapter.deleteMember(id)
+                if (studentsAdapter.isListOfMembersIsEmpty()) {
+                    rv_soldiers.visibility = View.INVISIBLE
+                    tv_empty_students_message.visibility = View.VISIBLE
                 }
-                else -> {
-                    commandersAdapter.deleteMember(id)
-                    if (commandersAdapter.isListOfMembersIsEmpty()) {
-                        rv_commanders.visibility = View.INVISIBLE
-                        tv_empty_commanders_message.visibility = View.VISIBLE
-                    }
+            }
+            else -> {
+                commandersAdapter.deleteMember(id)
+                if (commandersAdapter.isListOfMembersIsEmpty()) {
+                    rv_commanders.visibility = View.INVISIBLE
+                    tv_empty_commanders_message.visibility = View.VISIBLE
                 }
             }
         }
@@ -119,45 +109,43 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
         newRole: String,
         quequeNumber: Int
     ) {
-        activity?.runOnUiThread {
-            when {
-                oldRole == UserSquadPresenter.STUDENT -> {
-                    val member = studentsAdapter.findMember(id) ?: return@runOnUiThread
-                    studentsAdapter.deleteMember(id)
-                    member.role = newRole
-                    member.queueNumber = quequeNumber
-                    commandersAdapter.addMember(member)
+        when {
+            oldRole == UserSquadPresenter.STUDENT -> {
+                val member = studentsAdapter.findMember(id) ?: return
+                studentsAdapter.deleteMember(id)
+                member.role = newRole
+                member.queueNumber = quequeNumber
+                commandersAdapter.addMember(member)
 
-                    if (studentsAdapter.isListOfMembersIsEmpty()) {
-                        rv_soldiers.visibility = View.INVISIBLE
-                        tv_empty_students_message.visibility = View.VISIBLE
-                    }
-
-                    if (commandersAdapter.itemCount == 1) {
-                        rv_commanders.visibility = View.VISIBLE
-                        tv_empty_commanders_message.visibility = View.INVISIBLE
-                    }
+                if (studentsAdapter.isListOfMembersIsEmpty()) {
+                    rv_soldiers.visibility = View.INVISIBLE
+                    tv_empty_students_message.visibility = View.VISIBLE
                 }
-                newRole == UserSquadPresenter.STUDENT -> {
-                    val member = commandersAdapter.findMember(id) ?: return@runOnUiThread
-                    commandersAdapter.deleteMember(id)
-                    member.role = newRole
-                    member.queueNumber = quequeNumber
-                    studentsAdapter.addMember(member)
 
-                    if (commandersAdapter.isListOfMembersIsEmpty()) {
-                        rv_commanders.visibility = View.INVISIBLE
-                        tv_empty_commanders_message.visibility = View.VISIBLE
-                    }
+                if (commandersAdapter.itemCount == 1) {
+                    rv_commanders.visibility = View.VISIBLE
+                    tv_empty_commanders_message.visibility = View.INVISIBLE
+                }
+            }
+            newRole == UserSquadPresenter.STUDENT -> {
+                val member = commandersAdapter.findMember(id) ?: return
+                commandersAdapter.deleteMember(id)
+                member.role = newRole
+                member.queueNumber = quequeNumber
+                studentsAdapter.addMember(member)
 
-                    if (studentsAdapter.itemCount == 1) {
-                        rv_soldiers.visibility = View.VISIBLE
-                        tv_empty_students_message.visibility = View.INVISIBLE
-                    }
+                if (commandersAdapter.isListOfMembersIsEmpty()) {
+                    rv_commanders.visibility = View.INVISIBLE
+                    tv_empty_commanders_message.visibility = View.VISIBLE
                 }
-                else -> {
-                    commandersAdapter.updateMember(id, newRole, quequeNumber)
+
+                if (studentsAdapter.itemCount == 1) {
+                    rv_soldiers.visibility = View.VISIBLE
+                    tv_empty_students_message.visibility = View.INVISIBLE
                 }
+            }
+            else -> {
+                commandersAdapter.updateMember(id, newRole, quequeNumber)
             }
         }
     }

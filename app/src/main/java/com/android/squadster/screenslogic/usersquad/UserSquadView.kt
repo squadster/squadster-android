@@ -14,7 +14,4 @@ interface UserSquadView : MvpView {
 
     @AddToEnd
     fun updateSquadMemberRole(id: String, oldRole: String, newRole: String, quequeNumber: Int)
-
-    @AddToEnd
-    fun deleteSquad()
 }

@@ -1,7 +1,7 @@
-mutation updateSquadMember($id: ID!, $role: String!, $quequeNumber: Int!) {
+mutation updateSquadMember($id: ID!, $role: String!, $queueNumber: Int!) {
     updateSquadMember(
         id: $id,
-        queueNumber: $quequeNumber,
+        queueNumber: $queueNumber,
         role: $role
     ) {
         id

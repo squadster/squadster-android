@@ -24,8 +24,7 @@ class SquadSettingsFragment : BaseFragment(), SquadSettingsView, OnClickRequest 
 
     private lateinit var requestsAdapter: RequestsAdapter
 
-    override fun installScopeModules(scope: Scope) {
-    }
+    override fun installScopeModules(scope: Scope) {}
 
     @InjectPresenter
     lateinit var squadSettingsPresenter: SquadSettingsPresenter
@@ -46,9 +45,7 @@ class SquadSettingsFragment : BaseFragment(), SquadSettingsView, OnClickRequest 
 
 
     override fun showErrorMessage(message: String) {
-        activity?.runOnUiThread {
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        }
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
     override fun acceptRequest(id: String) {
@@ -65,15 +62,7 @@ class SquadSettingsFragment : BaseFragment(), SquadSettingsView, OnClickRequest 
     }
 
     override fun updateRequest(id: String) {
-        activity?.runOnUiThread {
-            requestsAdapter.deleteRequest(id)
-        }
-    }
-
-    override fun deleteSquad() {
-        activity?.runOnUiThread {
-            squadSettingsPresenter.goToSquads()
-        }
+        requestsAdapter.deleteRequest(id)
     }
 
     private fun setupViews() {
@@ -198,8 +187,7 @@ class SquadSettingsFragment : BaseFragment(), SquadSettingsView, OnClickRequest 
     }
 
     private fun hideKeyboard(view: View) {
-        val imm =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.applicationWindowToken, 0)
     }
 }

@@ -4,15 +4,13 @@ import com.android.squadster.core.BasePresenter
 import com.android.squadster.core.FlowRouter
 import com.android.squadster.core.Screens
 import com.android.squadster.model.data.server.interactor.QueriesInteractor
-import com.android.squadster.model.data.server.model.Auth
-import com.android.squadster.model.data.server.model.DraftUserInfo
-import com.android.squadster.model.data.server.model.ResponseCallback
-import com.android.squadster.model.data.server.model.UserInfo
+import com.android.squadster.model.data.server.model.*
 import com.android.squadster.model.data.storage.Prefs
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import moxy.InjectViewState
 import javax.inject.Inject
 
@@ -38,30 +36,29 @@ class AuthPresenter @Inject constructor(
 
     private fun getCurrentUserInfo() {
         GlobalScope.launch(Dispatchers.IO) {
-            queriesInteractor.getCurrentUserInfo(object : ResponseCallback<UserInfo> {
+            val result = queriesInteractor.getCurrentUserInfo()
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is ResultApiCall.Success -> {
+                        draftUserInfo.currentUserInfo = result.data
 
-                override fun success(data: UserInfo) {
-                    draftUserInfo.currentUserInfo = data
-
-                    if (data.squadMember?.squad == null) {
-                        viewState.goToSquadsScreen()
-                    } else {
-                        viewState.goToUserSquadScreen()
+                        result.data.squadMember?.squad?.let {
+                            goToUserSquadScreen()
+                        } ?: goToSquadsScreen()
+                    }
+                    is ResultApiCall.Error -> {
+                        viewState.showErrorMessage(result.message)
                     }
                 }
-
-                override fun error(error: String) {
-                    viewState.showErrorMessage(error)
-                }
-            })
+            }
         }
     }
 
-    fun goToSquadsScreen() {
+    private fun goToSquadsScreen() {
         flowRouter.replaceScreen(Screens.SquadsScreen)
     }
 
-    fun goToUserSquadScreen() {
+    private fun goToUserSquadScreen() {
         flowRouter.replaceScreen(Screens.UserSquadScreen)
     }
 }

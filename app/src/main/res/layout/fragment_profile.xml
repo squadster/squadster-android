@@ -72,11 +72,11 @@
         style="@style/Widget.FeatureButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_margin="70dp"
         android:text="@string/about_us"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        android:layout_margin="70dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_faculty" />
 
@@ -85,11 +85,11 @@
         style="@style/Widget.FeatureButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_margin="70dp"
         android:text="@string/log_out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        android:layout_margin="70dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_faculty" />
 

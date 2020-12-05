@@ -33,8 +33,8 @@ class SquadsAdapter(
         return squads.size
     }
 
-    fun setData(listOfSquads: ArrayList<GetSquadsQuery.Squad>) {
-        squads = ArrayList(listOfSquads.map { it.toSquad() })
+    fun setData(listOfSquads: ArrayList<Squad>) {
+        squads = listOfSquads
         notifyDataSetChanged()
     }
 

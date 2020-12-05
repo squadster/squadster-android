@@ -9,6 +9,7 @@ import com.android.squadster.screenslogic.profile.ProfileView
 import com.android.squadster.screenslogic.squads.SquadsPresenter
 import com.android.squadster.screenslogic.squads.SquadsView
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.fragment_squad_settings.*
 import kotlinx.android.synthetic.main.fragment_squads.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -42,20 +43,32 @@ class ProfileFragment : BaseFragment(), ProfileView {
         profilePresenter.draftUserInfo.anotherUser?.let { user ->
             profilePresenter.loadUserAvatar(context, iv_avatar, user.imageUrl)
 
-            tv_name.text = user.firstName + " " + user.lastName
+            tv_name.text = getString(R.string.name_and_lastname, user.firstName, user.lastName)
             tv_birthday.text = profilePresenter.draftUserInfo.currentUserInfo?.birthDate.toString()
-            tv_faculty.text = user.university + " " + user.faculty
+            tv_faculty.text = getString(R.string.name_and_lastname, user.university, user.faculty)
 
             btn_log_out.visibility = View.GONE
             btn_about_us.visibility = View.GONE
         } ?: run {
-            profilePresenter.loadUserAvatar(context, iv_avatar, profilePresenter.draftUserInfo.currentUserInfo?.imageUrl)
+            profilePresenter.loadUserAvatar(
+                context,
+                iv_avatar,
+                profilePresenter.draftUserInfo.currentUserInfo?.imageUrl
+            )
 
-            tv_name.text =
-                profilePresenter.draftUserInfo.currentUserInfo?.firstName + " " + profilePresenter.draftUserInfo.currentUserInfo?.lastName
+            tv_name.text = getString(
+                R.string.name_and_lastname,
+                profilePresenter.draftUserInfo.currentUserInfo?.firstName,
+                profilePresenter.draftUserInfo.currentUserInfo?.lastName
+            )
+
             tv_birthday.text = profilePresenter.draftUserInfo.currentUserInfo?.birthDate.toString()
-            tv_faculty.text =
-                profilePresenter.draftUserInfo.currentUserInfo?.university + " " + profilePresenter.draftUserInfo.currentUserInfo?.faculty
+
+            tv_faculty.text = getString(
+                R.string.name_and_lastname,
+                profilePresenter.draftUserInfo.currentUserInfo?.university,
+                profilePresenter.draftUserInfo.currentUserInfo?.faculty
+            )
 
             btn_log_out.setOnClickListener {
                 profilePresenter.logOut(context)

@@ -2,14 +2,15 @@ package com.android.squadster.model.data.server.interactor
 
 import com.android.squadster.R
 import com.android.squadster.di.provider.ApolloProvider
+import com.android.squadster.extension.toMember
+import com.android.squadster.extension.toSquad
 import com.android.squadster.extension.toUserInfo
 import com.android.squadster.extension.toUserSquad
-import com.android.squadster.model.data.server.model.ResponseCallback
-import com.android.squadster.model.data.server.model.UserInfo
-import com.android.squadster.model.data.server.model.UserSquad
+import com.android.squadster.model.data.server.model.*
 import com.android.squadster.model.system.resource.ResourceManager
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
+import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
 import com.squadster.server.*
 import com.squadster.server.type.SquadMembersBatch
@@ -20,352 +21,249 @@ class QueriesInteractor @Inject constructor(
     private val resourceManager: ResourceManager
 ) {
 
-    /*suspend fun getCurrentUserInfoNew(): Flow<UserInfo> {
-        return flow {
-            apolloProvider.apolloClient.query(GetCurrentUserQuery())
-                ?.enqueue(object : ApolloCall.Callback<GetCurrentUserQuery.Data>() {
-                    override fun onResponse(response: Response<GetCurrentUserQuery.Data>) {
-                        response.data?.currentUser?.let {
-                            GlobalScope.launch(Dispatchers.Main) {
-                                emit(it.toUserInfo())
-                            }
-                        }
-                    }
-
-                    override fun onFailure(e: ApolloException) {
-
-                    }
-                })
+    suspend fun getCurrentUserInfo(): ResultApiCall<UserInfo> {
+        val response = try {
+            apolloProvider.apolloClient.query(GetCurrentUserQuery()).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
         }
-    }*/
 
-    fun getCurrentUserInfo(callback: ResponseCallback<UserInfo>) {
-        apolloProvider.apolloClient.query(GetCurrentUserQuery())
-            ?.enqueue(object : ApolloCall.Callback<GetCurrentUserQuery.Data>() {
-                override fun onResponse(response: Response<GetCurrentUserQuery.Data>) {
-                    response.data?.currentUser?.let {
-                        callback.success(it.toUserInfo())
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
-
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
+        response.data?.currentUser?.let {
+            return ResultApiCall.Success(it.toUserInfo())
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
     }
 
-    fun getSquads(callback: ResponseCallback<GetSquadsQuery.Data>) {
-        apolloProvider.apolloClient.query(GetSquadsQuery())
-            ?.enqueue(object : ApolloCall.Callback<GetSquadsQuery.Data>() {
-                override fun onResponse(response: Response<GetSquadsQuery.Data>) {
-                    response.data?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
-
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
-    }
-
-    fun createSquadRequest(
-        id: String,
-        callback: ResponseCallback<CreateSquadRequestMutation.Data>
-    ) {
-        apolloProvider.apolloClient.mutate(CreateSquadRequestMutation(squadId = id))
-            ?.enqueue(object : ApolloCall.Callback<CreateSquadRequestMutation.Data>() {
-                override fun onResponse(response: Response<CreateSquadRequestMutation.Data>) {
-                    response.data?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
-
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
-    }
-
-    fun deleteSquadRequest(
-        id: String,
-        callback: ResponseCallback<DeleteSquadRequestMutation.Data>
-    ) {
-        apolloProvider.apolloClient.mutate(DeleteSquadRequestMutation(id = id))
-            ?.enqueue(object : ApolloCall.Callback<DeleteSquadRequestMutation.Data>() {
-                override fun onResponse(response: Response<DeleteSquadRequestMutation.Data>) {
-                    response.data?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
-
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
-    }
-
-    fun deleteMember(
-        id: String,
-        callback: ResponseCallback<DeleteSquadMemberMutation.Data>
-    ) {
-        apolloProvider.apolloClient.mutate(DeleteSquadMemberMutation(id = id))
-            ?.enqueue(object : ApolloCall.Callback<DeleteSquadMemberMutation.Data>() {
-                override fun onResponse(response: Response<DeleteSquadMemberMutation.Data>) {
-                    response.data?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
-
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
-    }
-
-    fun updateMemberRole(
-        id: String,
-        role: String,
-        quequeNumber: Int,
-        callback: ResponseCallback<UpdateSquadMemberMutation.Data>
-    ) {
-        apolloProvider.apolloClient
-            .mutate(UpdateSquadMemberMutation(id = id, role = role, quequeNumber = quequeNumber))
-            ?.enqueue(object : ApolloCall.Callback<UpdateSquadMemberMutation.Data>() {
-                override fun onResponse(response: Response<UpdateSquadMemberMutation.Data>) {
-                    response.data?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
-
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
-    }
-
-    fun createSquad(
-        squadNumber: String,
-        classDay: Int,
-        callback: ResponseCallback<UserSquad>
-    ) {
-        apolloProvider.apolloClient.mutate(
-            CreateSquadMutation(
-                squad_number = squadNumber,
-                class_day = classDay
+    suspend fun getSquads(): ResultApiCall<List<Squad>> {
+        val response = try {
+            apolloProvider.apolloClient.query(GetSquadsQuery()).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
             )
-        )
-            ?.enqueue(object : ApolloCall.Callback<CreateSquadMutation.Data>() {
-                override fun onResponse(response: Response<CreateSquadMutation.Data>) {
-                    response.data?.createSquad?.let {
-                        callback.success(it.toUserSquad())
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
+        }
 
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
+        response.data?.let { data ->
+            data.squads?.let { squads ->
+                return ResultApiCall.Success(
+                    squads.filterNotNull().map {
+                        it.toSquad()
+                    }
+                )
+            } ?: run {
+                return ResultApiCall.Success(ArrayList())
+            }
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
     }
 
-    fun updateSquadNumber(
-        id: String,
-        number: String,
-        callback: ResponseCallback<String>
-    ) {
-        apolloProvider.apolloClient.mutate(UpdateSquadNumberMutation(id = id, number = number))
-            ?.enqueue(object : ApolloCall.Callback<UpdateSquadNumberMutation.Data>() {
-                override fun onResponse(response: Response<UpdateSquadNumberMutation.Data>) {
-                    response.data?.updateSquad?.squadNumber?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
-
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
-    }
-
-    fun updateSquadClassDay(
-        id: String,
-        classDay: Int,
-        callback: ResponseCallback<String>
-    ) {
-        apolloProvider.apolloClient.mutate(
-            UpdateSquadClassDayMutation(
-                id = id,
-                classDay = classDay
+    suspend fun createSquadRequest(id: String): ResultApiCall<CreateSquadRequestMutation.Data> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(CreateSquadRequestMutation(squadId = id)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
             )
-        )
-            ?.enqueue(object : ApolloCall.Callback<UpdateSquadClassDayMutation.Data>() {
-                override fun onResponse(response: Response<UpdateSquadClassDayMutation.Data>) {
-                    response.data?.updateSquad?.classDay?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
+        }
 
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
+        response.data?.let {
+            return ResultApiCall.Success(it)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
     }
 
-    fun updateSquadAnnouncement(
-        id: String,
-        announcement: String,
-        callback: ResponseCallback<String>
-    ) {
-        apolloProvider.apolloClient.mutate(
-            UpdateSquadAnnouncementMutation(
-                id = id,
-                advertisment = announcement
+    suspend fun deleteSquadRequest(id: String): ResultApiCall<DeleteSquadRequestMutation.Data> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(DeleteSquadRequestMutation(id = id)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
             )
-        )
-            ?.enqueue(object : ApolloCall.Callback<UpdateSquadAnnouncementMutation.Data>() {
-                override fun onResponse(response: Response<UpdateSquadAnnouncementMutation.Data>) {
-                    response.data?.updateSquad?.advertisment?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
+        }
 
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
+        response.data?.let {
+            return ResultApiCall.Success(it)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
     }
 
-    fun deleteSquad(
-        id: String,
-        callback: ResponseCallback<Boolean>
-    ) {
-        apolloProvider.apolloClient.mutate(DeleteSquadMutation(id = id))
-            ?.enqueue(object : ApolloCall.Callback<DeleteSquadMutation.Data>() {
-                override fun onResponse(response: Response<DeleteSquadMutation.Data>) {
-                    response.data?.deleteSquad?.id?.let {
-                        callback.success(true)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
-
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
-    }
-
-    fun updateLinkInvitation(
-        id: String,
-        linkInvitationEnabled: Boolean,
-        callback: ResponseCallback<Boolean>
-    ) {
-        apolloProvider.apolloClient.mutate(
-            UpdateSquadLinkOptionMutation(
-                id = id,
-                linkOption = linkInvitationEnabled
+    suspend fun deleteMember(id: String): ResultApiCall<String> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(DeleteSquadMemberMutation(id = id)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
             )
-        )
-            ?.enqueue(object : ApolloCall.Callback<UpdateSquadLinkOptionMutation.Data>() {
-                override fun onResponse(response: Response<UpdateSquadLinkOptionMutation.Data>) {
-                    response.data?.updateSquad?.linkInvitationsEnabled?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
+        }
 
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
+        response.data?.deleteSquadMember?.let {
+            return ResultApiCall.Success(it.id)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
     }
 
-    fun acceptRequest(
-        id: String,
-        callback: ResponseCallback<ApproveSquadRequestMutation.ApproveSquadRequest>
-    ) {
-        apolloProvider.apolloClient.mutate(ApproveSquadRequestMutation(id = id))
-            ?.enqueue(object : ApolloCall.Callback<ApproveSquadRequestMutation.Data>() {
-                override fun onResponse(response: Response<ApproveSquadRequestMutation.Data>) {
-                    response.data?.approveSquadRequest?.let {
-                        callback.success(it)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
+    suspend fun updateMemberRole(id: String, role: String, queueNumber: Int): ResultApiCall<UpdateSquadMemberMutation.UpdateSquadMember> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(UpdateSquadMemberMutation(id = id, role = role, queueNumber = queueNumber)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
+        }
 
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
+        response.data?.updateSquadMember?.let {
+            return ResultApiCall.Success(it)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
     }
 
-    fun updateSquadQueue(
-        list: List<SquadMembersBatch>,
-        callback: ResponseCallback<Boolean>
-    ) {
-        apolloProvider.apolloClient.mutate(UpdateSquadMembersMutation(members = list))
-            ?.enqueue(object : ApolloCall.Callback<UpdateSquadMembersMutation.Data>() {
-                override fun onResponse(response: Response<UpdateSquadMembersMutation.Data>) {
-                    response.data?.let {
-                        callback.success(true)
-                    } ?: run {
-                        callback.error(resourceManager.getString(R.string.something_went_wrong))
-                    }
-                }
+    suspend fun createSquad(squadNumber: String, classDay: Int): ResultApiCall<UserSquad> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(CreateSquadMutation(squad_number = squadNumber, class_day = classDay)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
+        }
 
-                override fun onFailure(e: ApolloException) {
-                    callback.error(
-                        e.message ?: resourceManager.getString(R.string.something_went_wrong)
-                    )
-                }
-            })
+        response.data?.createSquad?.let {
+            return ResultApiCall.Success(it.toUserSquad())
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
+    }
+
+    suspend fun updateSquadNumber(id: String, number: String): ResultApiCall<String> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(UpdateSquadNumberMutation(id = id, number = number)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
+        }
+
+        response.data?.updateSquad?.squadNumber?.let {
+            return ResultApiCall.Success(it)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
+    }
+
+    suspend fun updateSquadClassDay(id: String, classDay: Int): ResultApiCall<String> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(UpdateSquadClassDayMutation(id = id, classDay = classDay)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
+        }
+
+        response.data?.updateSquad?.classDay?.let {
+            return ResultApiCall.Success(it)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
+    }
+
+    suspend fun updateSquadAnnouncement(id: String, announcement: String): ResultApiCall<String> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(UpdateSquadAnnouncementMutation(id = id, advertisment = announcement)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
+        }
+
+        response.data?.updateSquad?.advertisment?.let {
+            return ResultApiCall.Success(it)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
+    }
+
+    suspend fun deleteSquad(id: String): ResultApiCall<Boolean> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(DeleteSquadMutation(id = id)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
+        }
+
+        response.data?.deleteSquad?.id?.let {
+            return ResultApiCall.Success(true)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
+    }
+
+    suspend fun updateLinkInvitation(id: String, linkInvitationEnabled: Boolean): ResultApiCall<Boolean> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(UpdateSquadLinkOptionMutation(id = id, linkOption = linkInvitationEnabled)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
+        }
+
+        response.data?.updateSquad?.linkInvitationsEnabled?.let {
+            return ResultApiCall.Success(it)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
+    }
+
+    suspend fun acceptRequest(id: String): ResultApiCall<Member> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(ApproveSquadRequestMutation(id = id)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
+        }
+
+        response.data?.approveSquadRequest?.let {
+            return ResultApiCall.Success(it.toMember())
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
+    }
+
+    suspend fun updateSquadQueue(list: List<SquadMembersBatch>): ResultApiCall<Boolean> {
+        val response = try {
+            apolloProvider.apolloClient.mutate(UpdateSquadMembersMutation(members = list)).await()
+        } catch (ex: Exception) {
+            return ResultApiCall.Error(
+                -1,
+                ex.message ?: resourceManager.getString(R.string.something_went_wrong)
+            )
+        }
+
+        response.data?.let {
+            return ResultApiCall.Success(true)
+        } ?: run {
+            return ResultApiCall.Error(-1, resourceManager.getString(R.string.something_went_wrong))
+        }
     }
 }
