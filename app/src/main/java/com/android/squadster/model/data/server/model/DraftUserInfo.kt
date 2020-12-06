@@ -20,7 +20,7 @@ data class UserInfo(
     val smallImageUrl: String?,
     val vkUrl: String?,
     val birthDate: Any?,
-    val squadMember: SquadMember?
+    var squadMember: SquadMember?
 )
 
 data class SquadMember(

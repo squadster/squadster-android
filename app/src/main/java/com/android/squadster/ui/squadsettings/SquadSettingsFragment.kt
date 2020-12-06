@@ -84,16 +84,19 @@ class SquadSettingsFragment : BaseFragment(), SquadSettingsView, OnClickRequest 
         }
 
         iv_edit_squad_number.setOnClickListener {
+            if (!isAllSettingsFieldAreHide()) return@setOnClickListener
             ll_squad_number.visibility = View.GONE
             ll_new_squad_number.visibility = View.VISIBLE
         }
 
         iv_edit_squad_class_day.setOnClickListener {
+            if (!isAllSettingsFieldAreHide()) return@setOnClickListener
             ll_squad_class_day.visibility = View.GONE
             ll_new_squad_class_day.visibility = View.VISIBLE
         }
 
         iv_edit_squad_announcement.setOnClickListener {
+            if (!isAllSettingsFieldAreHide()) return@setOnClickListener
             et_squad_announcement.setText(announcement)
             ll_squad_announcement.visibility = View.GONE
             ll_new_squad_announcement.visibility = View.VISIBLE
@@ -189,5 +192,11 @@ class SquadSettingsFragment : BaseFragment(), SquadSettingsView, OnClickRequest 
     private fun hideKeyboard(view: View) {
         val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.applicationWindowToken, 0)
+    }
+
+    private fun isAllSettingsFieldAreHide(): Boolean {
+        return ll_new_squad_number.visibility == View.GONE
+                && ll_new_squad_class_day.visibility == View.GONE
+                && ll_new_squad_announcement.visibility == View.GONE
     }
 }

@@ -1,6 +1,9 @@
 package com.android.squadster.ui.usersquad
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -25,6 +28,7 @@ import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import toothpick.Scope
+
 
 class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
 
@@ -54,6 +58,9 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_user_squad, menu)
+        if (userSquadPresenter.draftUserInfo.currentUserInfo?.squadMember?.squad?.linkInvitationsEnabled == false) {
+            menu.findItem(R.id.mi_squad_link).isVisible = false
+        }
     }
 
     override fun deleteMember(id: String, role: String) {
@@ -165,6 +172,15 @@ class UserSquadFragment : BaseFragment(), UserSquadView, OnClickSquadMember {
                         .setNegativeButton(R.string.no) { dialog, _ -> dialog.cancel() }
                         .show()
                 }
+                true
+            }
+            R.id.mi_squad_link -> {
+                val hash = userSquadPresenter.draftUserInfo.currentUserInfo?.squadMember?.squad?.hashId
+                val link = getString(R.string.squad_link, hash)
+                val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("Link", link)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(context, R.string.link_copied, Toast.LENGTH_LONG).show()
                 true
             }
             R.id.mi_profile -> {

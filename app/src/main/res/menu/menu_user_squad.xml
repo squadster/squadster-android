@@ -8,6 +8,11 @@
         app:showAsAction="ifRoom"
         android:title="Item One"/>
     <item
+        android:id="@+id/mi_squad_link"
+        android:icon="@drawable/ic_link"
+        app:showAsAction="ifRoom"
+        android:title="Item One"/>
+    <item
         android:id="@+id/mi_profile"
         app:showAsAction="never"
         android:title="@string/profile"/>
