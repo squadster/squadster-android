@@ -62,6 +62,7 @@
             android:layout_marginBottom="158dp"
             android:fontFamily="sans-serif"
             android:gravity="center_horizontal"
+            android:inputType="number"
             android:hint="@string/number"
             android:textColorHint="@color/black"
             android:textSize="16sp"

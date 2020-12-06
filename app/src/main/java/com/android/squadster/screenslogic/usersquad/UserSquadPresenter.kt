@@ -33,7 +33,7 @@ class UserSquadPresenter @Inject constructor(
         var isCurrentUserCommander = false
 
         draftUserInfo.currentUserInfo?.squadMember?.squad?.members?.forEach { member ->
-            if (member.user?.id == draftUserInfo.currentUserInfo?.id) {
+            if (member.user?.id == draftUserInfo.currentUserInfo?.id && member.role == COMMANDER) {
                 isCurrentUserCommander = true
                 return@forEach
             }
