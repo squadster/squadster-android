@@ -1,14 +1,11 @@
 package com.android.squadster.core
 
-import io.reactivex.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import moxy.MvpView
 
 open class BasePresenter<V : MvpView> : MvpPresenter<V>() {
 
-    private val compositeDisposable = CompositeDisposable()
+    // TODO change all GlobalScope in Presenters to specific scopes for each screen
 
-    override fun onDestroy() {
-        compositeDisposable.dispose()
-    }
+    override fun onDestroy() {}
 }
