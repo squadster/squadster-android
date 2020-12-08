@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/tv_member_username"
-        android:layout_width="115dp"
+        android:layout_width="113dp"
         android:layout_height="match_parent"
         android:layout_marginStart="15dp"
         android:gravity="center"
