@@ -24,6 +24,5 @@ class ErrorHandler @Inject constructor(
         }
     }
 
-    fun onDestroy() {
-    }
+    fun onDestroy() {}
 }
