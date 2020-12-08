@@ -1,6 +1,7 @@
 # Squadster-android
 
-It's mobile version of Squadster application that helps student from university military departments.
+It's mobile version of Squadster application that helps students from university military departments.
+Check the [API repo](https://github.com/squadster/squadster-api) for more info.
 
 ## Installation guides
 1) Clone project from GitHub
